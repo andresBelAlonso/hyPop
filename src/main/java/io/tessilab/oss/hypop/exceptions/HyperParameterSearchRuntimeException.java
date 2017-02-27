@@ -21,13 +21,24 @@ package io.tessilab.oss.hypop.exceptions;
  */
 public class HyperParameterSearchRuntimeException extends RuntimeException{
 
+    /**
+     *
+     */
     public HyperParameterSearchRuntimeException() {
     }
 
+    /**
+     *
+     * @param message : A message with the cause of this exeception
+     */
     public HyperParameterSearchRuntimeException(String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param cause : The trowable that creates this exception
+     */
     public HyperParameterSearchRuntimeException(Throwable cause) {
         super(cause);
     }

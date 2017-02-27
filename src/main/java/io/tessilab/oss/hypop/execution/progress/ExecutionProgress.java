@@ -41,8 +41,8 @@ public interface ExecutionProgress extends ParametrizedObserver<ProcessResult>{
      * because a condition to stop was reached and 
      * {@link io.tessilab.oss.hypop.parameters.managers.ParametersManager} because 
      * there are not more jobs to do) and synchronyze with them. 
-     * @param paramManager
-     * @param stopCondition 
+     * @param paramManager : The parameter manager of the current execution
+     * @param stopCondition : The conditin to stop the execution
      */
     public void init(ParametersManager paramManager,StopCondition stopCondition);
   

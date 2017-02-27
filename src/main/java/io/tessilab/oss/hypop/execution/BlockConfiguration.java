@@ -19,6 +19,7 @@ package io.tessilab.oss.hypop.execution;
  * The class representing a block of configuration, that every important part of
  * the module should have an static class extending this class.
  * @author Andres BEL ALONSO
+ * @param <T> : The class that will be build by this config
  */
 public abstract class BlockConfiguration<T> {
     protected abstract T build();

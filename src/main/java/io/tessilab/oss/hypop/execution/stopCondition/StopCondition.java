@@ -36,6 +36,10 @@ public abstract class StopCondition implements ParametrizedObserver<ProcessResul
      */
     public abstract boolean continueWork();
     
+    /**
+     * 
+     * @return An estimation of the number of jobs to do
+     */
     public abstract int getJobsToDo();
     
 }
