@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.tessilab.utils.math;
+package io.tessilab.oss.hypop.math;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -29,10 +29,12 @@ public class Derivatives {
     /**
      * Computes an aproximation of a derivative by the formula : 
      *  ( f(x + h) - f(x) )/h where y1 = f(x + h) and y2 = f(x) 
-     * @param y1
-     * @param y2
-     * @param h
-     * @return 
+     * <p>
+     * Not enought precision with doubles
+     * @param y1 y1
+     * @param y2 y2 
+     * @param h The h value
+     * @return The 
      */
     @Deprecated
     public static double computePseudoDerivative(double y1,double y2, double h) {
