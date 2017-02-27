@@ -37,7 +37,7 @@ public interface ProcessResult<SCORE extends Comparable> {
     
     /**
      * A map only with the parameters of the execution
-     * @return 
+     * @return all the information contained in this object in map.
      */
     public Map<String,Object> getResultInDBFormat();
     

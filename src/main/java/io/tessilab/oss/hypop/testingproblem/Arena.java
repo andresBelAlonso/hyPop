@@ -25,8 +25,8 @@ public class Arena {
 
     /**
      * 
-     * @param monsterA
-     * @param monsterB
+     * @param monsterA The first monsteer
+     * @param monsterB The other monster
      * @return can return null if null match
      */
     public static BattleInfo fight(Monster monsterA, Monster monsterB) {

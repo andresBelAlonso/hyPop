@@ -34,13 +34,21 @@ public class Derivatives {
      * @param y1 y1
      * @param y2 y2 
      * @param h The h value
-     * @return The 
+     * @return The derivative of the value
      */
     @Deprecated
     public static double computePseudoDerivative(double y1,double y2, double h) {
         return (y1-y2)/h;
     }
     
+    /**
+     * Computes an aproximation of a derivative by the formula : 
+     *  ( f(x + h) - f(x) )/h where y1 = f(x + h) and y2 = f(x) 
+     * @param y1 y1
+     * @param y2 y2 
+     * @param h The h value
+     * @return The derivative of the value
+     */
     public static BigDecimal computePseudoDerivative(BigDecimal y1,BigDecimal y2, BigDecimal h, MathContext context) {
         return y1.subtract(y2,context).divide(h,context);
     }

@@ -35,8 +35,8 @@ public class InputBooleanParameter<T> extends InputParameter<Boolean>{
     
     /**
      * 
-     * @param parameterName 
-     * @param value : The value returned whe the parameter is true
+     * @param parameterName The name of the parameter
+     * @param value The value returned whe the parameter is true
      * @param representingString : the string representing the value
      */
     public InputBooleanParameter(ParameterName parameterName, T value, String representingString) {
@@ -47,8 +47,8 @@ public class InputBooleanParameter<T> extends InputParameter<Boolean>{
     
     /**
      * If maxValues equals only to one, the associated object is returned
-     * @param maxValues
-     * @return 
+     * @param maxValues The maximun values to get
+     * @return A list containing (or not) the associated object
      */
     @Override
     public List<ExecutionParameter> getPosibleValues(int maxValues) {
@@ -71,10 +71,10 @@ public class InputBooleanParameter<T> extends InputParameter<Boolean>{
 
     /**
      * 
-     * @param param
+     * @param param The son parameter
      * @param value : true when the value is related with the existence of the parameter
      * and false if the parameter is related to the absence of the value
-     * @throws io.tessilab.hyperparam.parameters.input.InputParameter.NotValidParameterValue 
+     * @throws io.tessilab.oss.hypop.parameters.input.InputParameter.NotValidParameterValue
      */
     @Override
     public void addSubparameter(InputParameter param, Boolean value) throws NotValidParameterValue {

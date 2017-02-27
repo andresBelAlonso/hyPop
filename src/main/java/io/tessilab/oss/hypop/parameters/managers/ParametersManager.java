@@ -79,7 +79,7 @@ public abstract class ParametersManager implements ParametrizedObserver<ProcessR
     /**
      * The job passed in argument can not be compute now (probably because it is 
      * compute by another instance of the hyperparameter research).
-     * @param params 
+     * @param params The concerned parameters
      */
     public abstract void canNotBeDoneNow(ExecutionParametersSet params);
     
@@ -87,7 +87,7 @@ public abstract class ParametersManager implements ParametrizedObserver<ProcessR
      * The parameter manager is notify that the parameters in argument are not 
      * a set of parameters that can be compute (because they are not coherent, 
      * because they contain banned values ...) 
-     * @param params 
+     * @param params The concerned parameter
      */
     public abstract void notifyAsNotValidParameter(ExecutionParametersSet params);
 }

@@ -22,7 +22,7 @@ import io.tessilab.oss.hypop.parameters.execution.ExecutionParametersSet;
  * The interface to access to the database, or other classes that ensure the 
  * saving of the results of each execution of the problem
  * @author Andres BEL ALONSO
- * @param <PROCESSRESULT>
+ * @param <PROCESSRESULT> : The type of result to save
  */
 public interface ResultsSaver<PROCESSRESULT> {
     
@@ -31,7 +31,7 @@ public interface ResultsSaver<PROCESSRESULT> {
     
     /**
      * 
-     * @param params
+     * @param params The parameters of the job
      * @return The process result of an ended job do by other process than this one.
      */
     public SaverAnswer getJobDone(ExecutionParametersSet params);

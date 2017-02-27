@@ -60,7 +60,7 @@ public abstract class Interval<T extends Comparable,PARAMTYPE extends Interval> 
     
     /**
      * 
-     * @param val
+     * @param val The value to test if it is or not in this interval
      * @return true if val belongs to the interval
      */
     public boolean isInInterval(T val) {

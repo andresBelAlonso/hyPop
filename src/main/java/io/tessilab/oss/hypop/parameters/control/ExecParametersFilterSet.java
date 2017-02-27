@@ -30,10 +30,6 @@ public abstract class ExecParametersFilterSet {
         
         private InputParametersSet inputParams;
         
-        
-        /**
-         * @param params 
-         */
         public void setInputParameterSet(InputParametersSet params) {
 //            This is set from the execution run, before te building 
             this.inputParams = params;

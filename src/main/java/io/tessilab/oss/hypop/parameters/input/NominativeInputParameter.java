@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * The class who represents a nominative value
  * @author Andres BEL ALONSO
- * @param <T>
+ * @param <T> The type of parameter
  */
 public class NominativeInputParameter<T> extends InputParameter<T> {
     

@@ -35,8 +35,8 @@ public interface ProcessInterface {
 
     /**
      * Computes one execution of the problem with the parameters pass to this method.
-     * @param params : The parameters of the execution
-     * @return 
+     * @param params  The parameters of the execution
+     * @return The 
      */
     public abstract ProcessResult computeIt(ExecutionParametersSet params);
     
@@ -46,7 +46,7 @@ public interface ProcessInterface {
      * of the problem can take. 
      * <p>
      * See the wiki for more precise considerations
-     * @return 
+     * @return The representation of the problems parameters
      */
     public abstract InputParametersSet createInputParameters();
     
@@ -61,7 +61,8 @@ public interface ProcessInterface {
      * will have, with the output of the database
      * @param jobDone : The database contain that has been saved after the 
      * execution of a job. 
-     * @return 
+     * @return An object with the information of the execution, with the same information than
+     * {@link io.tessilab.oss.hypop.extinterface.ProcessInterface#computeIt(io.tessilab.oss.hypop.parameters.execution.ExecutionParametersSet) produce}
      */
     public ProcessResult createResult(SaverAnswer jobDone);
 

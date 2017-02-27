@@ -30,9 +30,9 @@ import java.util.List;
 public interface SubParameterRelationInput<T> {
     
     /**
-     * The list of values of the father parameter related to the subparameter. 
-     * @param maxValues : The maximun number of values than the list can contain. 
-     * @return 
+     * 
+     * @param maxValues The maximun number of values than the list can contain. 
+     * @return The list of values of the father parameter related to the subparameter. 
      */
     public List<T> getFatherValues(int maxValues);
     
@@ -57,7 +57,7 @@ public interface SubParameterRelationInput<T> {
     
     /**
      * 
-     * @param value
+     * @param value The concerned value
      * @return true if the value is a father value
      */
     public boolean isFatherValue(T value);

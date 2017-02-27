@@ -28,7 +28,7 @@ public class ParameterName implements Comparable<ParameterName>{
 
     /**
      * The string representing the name of a parameter
-     * @param parameterName 
+     * @param parameterName A string with the name
      */
     public ParameterName(String parameterName) {
         this.parameterName = parameterName;

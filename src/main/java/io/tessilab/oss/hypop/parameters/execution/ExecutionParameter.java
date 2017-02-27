@@ -97,7 +97,7 @@ public class ExecutionParameter implements Comparable<ExecutionParameter>{
      * So, <U><B>this compareTo does not complain with the equals (and the hashCode) 
      * contract.</B></U> In fact compareTo is only use by the class who sort all the values take
      * by all the parameters, and we want an order only over the name. 
-     * @param o
+     * @param o : The other execution parameters
      * @return negative integer, 0 or possitive if it is respectively lower than,
      * if this object is equal than or greater than the object passed in argument.
      */

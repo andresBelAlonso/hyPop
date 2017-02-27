@@ -101,8 +101,8 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
      * Equals only verifies (apart the null and class verification) that name of 
      * the parameter name. So, two parameters of the same type with the same name 
      * but with different values (like intervals with different borders) are equal
-     * @param obj
-     * @return 
+     * @param obj The other obj to compare
+     * @return true if obj is equal to this object
      */
     @Override
     public final boolean equals(Object obj) {
@@ -152,9 +152,9 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
     }
     
     /**
-     * Returns the input parameters related to the value or an empty list if there are not. 
-     * @param value
-     * @return 
+     * 
+     * @param value The value to know to get the associated subparameters
+     * @return  the input parameters related to the value or an empty list if there are not. 
      */
     public List<InputParameter> getAssociatedSubParams(PARAM_TYPE value) {
         return this.subParameters.stream()

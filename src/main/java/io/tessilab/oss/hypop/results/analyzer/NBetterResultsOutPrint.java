@@ -124,7 +124,7 @@ public class NBetterResultsOutPrint implements ResultAnalyzer {
     
     /**
      * The number of scores saved.
-     * @return 
+     * @return The number of results allready saved
      */
     public int size() {
         int counter = 0;

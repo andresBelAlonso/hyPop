@@ -5,6 +5,7 @@
  */
 package io.tessilab.utils.math;
 
+import io.tessilab.oss.hypop.math.Derivatives;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;

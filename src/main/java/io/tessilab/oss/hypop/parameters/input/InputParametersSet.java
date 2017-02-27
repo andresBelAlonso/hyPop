@@ -22,9 +22,7 @@ import io.tessilab.oss.openutils.treedisplaying.TreeStructure;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -86,8 +84,8 @@ public class InputParametersSet implements TreeStructure{
     /***** Add API *****/ 
     
     /**
-     * 
-     * @param parameter 
+     * Ads a parameter to this input parameters set
+     * @param parameter The parameter to add
      */
     public void addParameter(InputParameter parameter) {
         this.allParameters.put(parameter.getParameterName(),parameter);
@@ -97,9 +95,11 @@ public class InputParametersSet implements TreeStructure{
     /**
      * Adds a relation between two parameters. 
      * A relation is some values related with an input parameter who is a subparameter
-     * @param subParameter
-     * @param singleValue
-     * @param fatherParameter
+     * @param subParameter  The son parameter
+     * @param singleValue The value that creaters the relation between the son and the father parameter
+     * @param fatherParameter The father parameter
+     * @throws io.tessilab.oss.hypop.parameters.input.InputParameter.NotValidParameterValue Throws this when the 
+     * the value that makes the relation is not a possible value of the father parameter
      */
     public void addRelation(InputParameter fatherParameter, Object singleValue,InputParameter subParameter) throws InputParameter.NotValidParameterValue {
         fatherParameter.addSubparameter(subParameter, singleValue);
@@ -107,12 +107,30 @@ public class InputParametersSet implements TreeStructure{
         deleteDependParameter(subParameter);
     }
     
+    /**
+     * Adds a relation between two parameters. 
+     * A relation is some values related with an input parameter who is a subparameter
+     * @param subParameter  The son parameter
+     * @param values A list of values that relates the son parameter with the father parameter
+     * @param fatherParameter The father parameter
+     * @throws io.tessilab.oss.hypop.parameters.input.InputParameter.NotValidParameterValue Throws this when the 
+     * the value that makes the relation is not a possible value of the father parameter
+     */    
     public void addRelation(InputParameter fatherParameter, List values,InputParameter subParameter) throws InputParameter.NotValidParameterValue {
         fatherParameter.addSubparameter(subParameter, values);
         verifyParamsAndAddNonExistingOnes(Arrays.asList(subParameter,fatherParameter)); 
         deleteDependParameter(subParameter);
     }
     
+    /**
+     * Adds a relation between two parameters. 
+     * A relation is some values related with an input parameter who is a subparameter
+     * @param subParameter  The son parameter
+     * @param values A list of values that relates the son parameter with the father parameter
+     * @param fatherParameter The father parameter
+     * @throws io.tessilab.oss.hypop.parameters.input.InputParameter.NotValidParameterValue Throws this when the 
+     * the value that makes the relation is not a possible value of the father parameter
+     */    
     public void addRelation(InputParameter fatherParameter,ContinuousInterval values, ContinuousInterval subParameter) throws InputParameter.NotValidParameterValue {
         fatherParameter.addSubparameter(subParameter, values);
         verifyParamsAndAddNonExistingOnes(Arrays.asList(subParameter,fatherParameter));        
@@ -154,7 +172,7 @@ public class InputParametersSet implements TreeStructure{
 
     /**
      * Looks in all the parameters to see if there is a parameter with this name
-     * @param inputParameter
+     * @param inputParameter The concern input parameter
      * @return True if there a parameter with this name. 
      */
     public boolean hasParameter(ParameterName inputParameter) {
@@ -164,7 +182,7 @@ public class InputParametersSet implements TreeStructure{
     /**
      * After call this, please call hasParameter to prevent to have null as 
      * result return. 
-     * @param inParam
+     * @param inParam The name of the parameter
      * @return The parameter with this name. Note that there can not be two parameters
      * with the same name, or null if it does not exist.
      */
@@ -174,7 +192,7 @@ public class InputParametersSet implements TreeStructure{
     
     /**
      * 
-     * @param inParam
+     * @param inParam The name of the parameter
      * @return true if the parameterName passed in argument is the name of a direct
      * root child parameter (i.e. : there is not another param that has the parameter 
      * name passed in argument as his child)
@@ -185,7 +203,7 @@ public class InputParametersSet implements TreeStructure{
     
     /**
      * Adds a filter to these input parameters
-     * @param filter 
+     * @param filter The filter
      */
     public void addParametersConstraint(ExecParametersFilter filter) {
         this.filters.add(filter);

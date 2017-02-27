@@ -48,8 +48,8 @@ public class ExecutionParametersSet implements JobParameter {
     /**
      * Creates the execution parameter set simply doing the fusion of the execution
      * parameters set.
-     * @param groupedParams
-     * @param dummy : this param does nothing... but is here 
+     * @param groupedParams  The list of execution parameters that would form this execution parameters
+     * @param dummy  this param does nothing... but is here 
      */
     public ExecutionParametersSet(List<ExecutionParametersSet> groupedParams,boolean dummy) {
         this();
