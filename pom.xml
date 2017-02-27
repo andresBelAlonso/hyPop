@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.tessilab</groupId>
     <artifactId>HyPop</artifactId>
-    <version>0.2.3.0</version>
+    <version>0.2.3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -57,8 +57,9 @@
     <scm>
         <connection>scm:git:git://github.com/tessi-lab/hyPop.git</connection>
         <developerConnection>scm:git:ssh://github.com/tessi-lab/hyPop.git</developerConnection>
-        <url>http://github.com/tessi-lab/hyPop.git/tree/master</url>
-    </scm>   
+        <url>https://github.com/tessi-lab/hyPop.git/tree/master</url>
+      <tag>HyPop-0.2.3.0</tag>
+  </scm>   
     <build>
         <plugins>
             <plugin>
