@@ -56,10 +56,21 @@
   
     <scm>
         <connection>scm:git:git://github.com/tessi-lab/hyPop.git</connection>
-        <developerConnection>scm:git:ssh://github.com/tessi-lab/hyPop.git</developerConnection>
+        <developerConnection>scm:git:[fetch]=ssh://git@github.com/tessi-lab/hyPop.git[push]=origin</developerConnection>
         <url>https://github.com/tessi-lab/hyPop.git/tree/master</url>
-      <tag>HyPop-0.2.3.0</tag>
-  </scm>   
+        <tag>HyPop-0.2.3.0</tag>
+    </scm>
+  
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>   
     <build>
         <plugins>
 <!--            <plugin>
