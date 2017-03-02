@@ -23,7 +23,7 @@
             <version>0.5.3</version>
         </dependency>
         <dependency>
-            <groupId>io.tessilab</groupId>
+            <groupId>io.tessilab.oss</groupId>
             <artifactId>OpenUtils</artifactId>
             <version>1.0.0</version>
         </dependency>
