@@ -50,7 +50,7 @@ public class HelloWorld {
      * Prints the parametrized message into the specified output
      */
     public void printHelloWorld() {
-        output.print("Hello " + target + ". This is " + source + ".");
+        output.println("Hello " + target + ". This is " + source + ".");
     }
     
     
