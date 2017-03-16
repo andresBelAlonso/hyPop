@@ -8,9 +8,9 @@ Currently, HyPop is in developement. Any contributions and ideas are welcome. Es
 
 ## Whats is Hyperparameter optimization? 
 
-In a machine learning context, we call Hyperparameter the parameters of an algorithm, or a process, that does not depend on the input data set. Usually Hyperparameters, can not be learned automatically. The hyperparameters are often the parameters of a  learning algorithm. 
+In a machine learning context, we call hyperparameter the parameters of an algorithm, or a process, that does not depend on the input data set. Usually hyperparameters, can not be learned automatically. The hyperparameters are often the parameters of a learning algorithm. 
 
-For example, in an artificial neural network, the number of hiden layers and their number of neurons per layer are hyperparameters. For a Document Classifier module, the algorithm that is going to be trained to classify the documents is an hyperparameter. If we train a k-nearest neighbors ( https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm )  to classify documents, the k value is an hyperparameter. If we are solving a clustering problem with a K-means (https://en.wikipedia.org/wiki/K-means_clustering) algorithm the number of clusters to create is also an hyperparameter. 
+For example, in an artificial neural network, the number of hiden layers and their number of neurons are hyperparameters. For a Document Classifier module, the algorithm that is going to be trained to classify the documents is an hyperparameter. If we train a k-nearest neighbors ( https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm )  to classify documents, the k value is an hyperparameter. If we are solving a clustering problem with a K-means (https://en.wikipedia.org/wiki/K-means_clustering) algorithm the number of clusters to create is also an hyperparameter. 
 
 So, Hyperparameter optimization (also called model selection), is the problem of find the best hyperparameters for a given machine learning problem and a given dataset. 
 
