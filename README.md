@@ -24,7 +24,7 @@ The easiest way to use HyPop in your project is use maven and add this dependenc
             <version>0.2.3.0</version>
         </dependency>
 
-## Suported and upcoming optimzation algorithms 
+## Suported and upcoming optimization algorithms 
 
 - [x] Grid Search 
 - [x] Random Search 
