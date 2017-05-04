@@ -1,10 +1,18 @@
 # HyPop
 
 Welcome to the Tessi lab open source project, HyPop. 
-HyPop is a Java module of hyperparameter optimization under Apache 2.0 license.
+HyPop is a hyperparameter optimization Java module under Apache 2.0 license.
 
 
-Currently, HyPop is in developement. Any contributions and ideas are welcome. Especially on hyperparameter selection algorithms and how to ease the intregation of this library to new problems. 
+Currently, HyPop is in developement. Any contributions and ideas are welcome. Especially on hyperparameter selection algorithms and how to ease the integration of this library to new problems. 
+
+## Whats is Hyperparameter optimization? 
+
+In a machine learning context, we call hyperparameters the parameters of an algorithm, or a process, that does not depend on the input data set. Usually, hyperparameters can not be learned automatically. The hyperparameters are often the parameters of a learning algorithm. 
+
+For example, in an artificial neural network, the number of hidden layers and their number of neurons are hyperparameters. For a Document Classifier module, the algorithm that is going to be trained to classify the documents is an hyperparameter. If we train a k-nearest neighbors ( https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm ) to classify documents, the k value is an hyperparameter. If we are solving a clustering problem with a K-means (https://en.wikipedia.org/wiki/K-means_clustering) algorithm the number of clusters to create is also an hyperparameter. 
+
+Therefore, Hyperparameter optimization (also called model selection) is the problem of finding the best hyperparameters for a given machine learning problem and a given dataset. 
 
 ## Installing 
 
@@ -16,7 +24,7 @@ The easiest way to use HyPop in your project is use maven and add this dependenc
             <version>0.2.3.0</version>
         </dependency>
 
-## Suported and upcoming optimzation algorithms 
+## Suported and upcoming optimization algorithms 
 
 - [x] Grid Search 
 - [x] Random Search 
