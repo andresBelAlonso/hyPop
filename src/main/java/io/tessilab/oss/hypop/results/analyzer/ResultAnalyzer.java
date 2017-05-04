@@ -22,10 +22,14 @@ import io.tessilab.oss.openutils.designpatterns.observer.ParametrizedObserver;
 /**
  * The class that must analyse the results of an hyperparameter search
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score associated to this process result
+ * @param <PROCESSRESULT> The class representing the output of one execution
  */
-public interface ResultAnalyzer extends ParametrizedObserver<ProcessResult>{
+public interface ResultAnalyzer<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> extends
+        ParametrizedObserver<PROCESSRESULT>{
     
-    public static abstract class Config extends BlockConfiguration<ResultAnalyzer> {
+    public static abstract class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends BlockConfiguration<ResultAnalyzer<SCORE,PROCESSRESULT>> {
         
     }
     

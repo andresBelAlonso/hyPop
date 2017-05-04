@@ -28,13 +28,17 @@ import org.elasticsearch.action.get.GetResponse;
  * The saver that saves it results on an ElasticSearch database <p>
  * https://www.elastic.co
  * @author Andres BEL ALONSO
- * @param <PROCESSRESULT>
+ * @param <SCORE> : The score of the process result
+ * @param <PROCESSRESULT> The class containing all the informations about one execution
+ * 
  */
-public class ElasticSearchResultSaver<PROCESSRESULT extends ProcessResult> implements ResultsSaver<PROCESSRESULT> {
+public class ElasticSearchResultSaver<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        implements ResultsSaver<SCORE,PROCESSRESULT> {
 
     private static final Logger LOGGER = LogManager.getLogger(ElasticSearchResultSaver.class);
 
-    public static class Config extends ResultsSaver.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ResultsSaver.Config<SCORE,PROCESSRESULT> {
 
         private final ElasticSearchBaseData baseData;
         private final String ESType;
@@ -45,8 +49,8 @@ public class ElasticSearchResultSaver<PROCESSRESULT extends ProcessResult> imple
         }
 
         @Override
-        protected ResultsSaver build() {
-            return new ElasticSearchResultSaver(baseData, ESType);
+        protected ResultsSaver<SCORE,PROCESSRESULT> build() {
+            return new ElasticSearchResultSaver<>(baseData, ESType);
         }
 
     }

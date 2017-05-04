@@ -21,13 +21,16 @@ import org.apache.logging.log4j.LogManager;
 /**
  * A stop condition based on the number of jobs to do. 
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of the quality of an execution
+ * @param <PROCESSRESULT> The class containing all the information about a process result
  */
-public class JobsToDoStopCondition extends StopCondition{
+public class JobsToDoStopCondition<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>> extends StopCondition<SCORE,PROCESSRESULT> {
     
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(JobsToDoStopCondition.class);
 
     
-    public static class Config extends StopCondition.Config {
+    public static class Config<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>> 
+            extends StopCondition.Config {
         
         private final int nbWorksToDo;
 
@@ -36,8 +39,8 @@ public class JobsToDoStopCondition extends StopCondition{
         }
 
         @Override
-        protected StopCondition build() {
-            return new JobsToDoStopCondition(nbWorksToDo);
+        protected StopCondition<SCORE,PROCESSRESULT> build() {
+            return new JobsToDoStopCondition<>(nbWorksToDo);
         }
         
     }
@@ -67,7 +70,7 @@ public class JobsToDoStopCondition extends StopCondition{
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         computedWorks ++;
     }
     

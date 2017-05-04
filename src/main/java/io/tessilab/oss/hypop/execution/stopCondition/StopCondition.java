@@ -24,10 +24,14 @@ import io.tessilab.oss.openutils.designpatterns.observer.ParametrizedObserver;
  * stop conditions to the hyperparameter research execution.
  * 
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of the quality of an execution
+ * @param <PROCESSRESULT> The class containing all the information about a process result
  */
-public abstract class StopCondition implements ParametrizedObserver<ProcessResult>{
+public abstract class StopCondition<SCORE extends Comparable<SCORE>,
+        PROCESSRESULT extends ProcessResult<SCORE>> implements ParametrizedObserver<PROCESSRESULT>{
     
-    public static abstract class Config extends BlockConfiguration<StopCondition> {
+    public static abstract class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends BlockConfiguration<StopCondition<SCORE,PROCESSRESULT>> {
         
     }
     

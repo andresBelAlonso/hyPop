@@ -27,10 +27,13 @@ import io.tessilab.oss.hypop.results.saver.SaverAnswer;
  * Usually this class and {@link io.tessilab.oss.hypop.results.ProcessResult} are 
  * the two class that must be override to make the link with the external problem.
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of the quality of an execution
+ * @param <PROCESSRESULT> The class containing all the information about a process result
  */
-public interface ProcessInterface {
+public interface ProcessInterface<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> {
 
-    public static abstract class Config extends BlockConfiguration<ProcessInterface> {
+    public static abstract class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends BlockConfiguration<ProcessInterface<SCORE,PROCESSRESULT>> {
     }
 
     /**
@@ -38,7 +41,7 @@ public interface ProcessInterface {
      * @param params  The parameters of the execution
      * @return The 
      */
-    public abstract ProcessResult computeIt(ExecutionParametersSet params);
+    public abstract PROCESSRESULT computeIt(ExecutionParametersSet params);
     
     /**
      * This function creates the global parameters of the optimisation. In other 
@@ -64,7 +67,7 @@ public interface ProcessInterface {
      * @return An object with the information of the execution, with the same information than
      * {@link io.tessilab.oss.hypop.extinterface.ProcessInterface#computeIt(io.tessilab.oss.hypop.parameters.execution.ExecutionParametersSet) produce}
      */
-    public ProcessResult createResult(SaverAnswer jobDone);
+    public PROCESSRESULT createResult(SaverAnswer jobDone);
 
     
 }

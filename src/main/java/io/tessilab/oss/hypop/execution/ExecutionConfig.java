@@ -20,6 +20,7 @@ import io.tessilab.oss.hypop.execution.stopCondition.StopCondition;
 import io.tessilab.oss.hypop.extinterface.ProcessInterface;
 import io.tessilab.oss.hypop.parameters.control.ExecParametersFilterSet;
 import io.tessilab.oss.hypop.parameters.managers.ParametersManager;
+import io.tessilab.oss.hypop.results.ProcessResult;
 import io.tessilab.oss.hypop.results.saver.ResultsSaver;
 import io.tessilab.oss.hypop.results.analyzer.ResultAnalyzer;
 import io.tessilab.oss.openutils.locker.DAO;
@@ -28,19 +29,21 @@ import io.tessilab.oss.openutils.locker.DAO;
  * The config of an execution containing all the blocks and building in 
  * depending on the related {@link io.tessilab.oss.hypop.execution.BlockConfiguration}
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of an execution process
+ * @param <PROCESSRESULT> The class containing all the process 
  */
-public class ExecutionConfig {
+public class ExecutionConfig<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> {
     
     public static final boolean DEFAULT_DO_ENDED_JOBS = true;
     
     public static final long DEFAULT_TOO_OLD_LOCK = 5000000;
     
-    private ParametersManager.Config paramsConfig;
-    private ResultsSaver.Config resultsSaverConfig;
-    private StopCondition.Config stopConditionConfig;
-    private ProcessInterface.Config processInterface;
-    private ResultAnalyzer.Config resultAnalyzerConfig;
-    private ExecutionProgress.Config executionProgressConfig;
+    private ParametersManager.Config<SCORE,PROCESSRESULT> paramsConfig;
+    private ResultsSaver.Config<SCORE,PROCESSRESULT> resultsSaverConfig;
+    private StopCondition.Config<SCORE,PROCESSRESULT> stopConditionConfig;
+    private ProcessInterface.Config<SCORE,PROCESSRESULT> processInterface;
+    private ResultAnalyzer.Config<SCORE,PROCESSRESULT> resultAnalyzerConfig;
+    private ExecutionProgress.Config<SCORE,PROCESSRESULT> executionProgressConfig;
     private ExecParametersFilterSet.Config execParamsFiltersConfig;
     
     /*Locker config*/
@@ -48,27 +51,27 @@ public class ExecutionConfig {
     private long tooOldLock = DEFAULT_TOO_OLD_LOCK;
     private boolean doEndedJobs = DEFAULT_DO_ENDED_JOBS;
     
-    ParametersManager buildParametersManager() {
+    ParametersManager<SCORE,PROCESSRESULT> buildParametersManager() {
         return paramsConfig.synchroBuild();
     }
     
-    ResultsSaver buildResultsSaver() {
+    ResultsSaver<SCORE,PROCESSRESULT> buildResultsSaver() {
         return resultsSaverConfig.synchroBuild();
     }
     
-    ProcessInterface buildProcessInterface() {
+    ProcessInterface<SCORE,PROCESSRESULT> buildProcessInterface() {
         return processInterface.synchroBuild();
     }
     
-    StopCondition buildStopCondition() {
+    StopCondition<SCORE,PROCESSRESULT> buildStopCondition() {
         return stopConditionConfig.build();
     }
     
-    ResultAnalyzer buildResultAnalyzer() {
+    ResultAnalyzer<SCORE,PROCESSRESULT> buildResultAnalyzer() {
         return resultAnalyzerConfig.synchroBuild();
     }
     
-    ExecutionProgress buildExecutionProgress() {
+    ExecutionProgress<SCORE,PROCESSRESULT> buildExecutionProgress() {
         return executionProgressConfig.synchroBuild();
     }
     
@@ -85,11 +88,11 @@ public class ExecutionConfig {
         this.lockerDao = lockerDao;
     }
 
-    public ProcessInterface.Config getProcessInterface() {
+    public ProcessInterface.Config<SCORE,PROCESSRESULT> getProcessInterface() {
         return processInterface;
     }
 
-    public void setProcessInterface(ProcessInterface.Config processInterface) {
+    public void setProcessInterface(ProcessInterface.Config<SCORE,PROCESSRESULT> processInterface) {
         this.processInterface = processInterface;
     }
 
@@ -109,43 +112,43 @@ public class ExecutionConfig {
         this.doEndedJobs = doEndedJobs;
     }
 
-    public ParametersManager.Config getParamsConfig() {
+    public ParametersManager.Config<SCORE,PROCESSRESULT> getParamsConfig() {
         return paramsConfig;
     }
 
-    public void setParametersManagerConfig(ParametersManager.Config paramsConfig) {
+    public void setParametersManagerConfig(ParametersManager.Config<SCORE,PROCESSRESULT> paramsConfig) {
         this.paramsConfig = paramsConfig;
     }
 
-    public ResultsSaver.Config getResultsSaverConfig() {
+    public ResultsSaver.Config<SCORE,PROCESSRESULT> getResultsSaverConfig() {
         return resultsSaverConfig;
     }
 
-    public void setResultsSaverConfig(ResultsSaver.Config resultsSaverConfig) {
+    public void setResultsSaverConfig(ResultsSaver.Config<SCORE,PROCESSRESULT> resultsSaverConfig) {
         this.resultsSaverConfig = resultsSaverConfig;
     }
 
-    public StopCondition.Config getStopConditionConfig() {
+    public StopCondition.Config<SCORE,PROCESSRESULT> getStopConditionConfig() {
         return stopConditionConfig;
     }
 
-    public void setStopConditionConfig(StopCondition.Config stopConditionConfig) {
+    public void setStopConditionConfig(StopCondition.Config<SCORE,PROCESSRESULT> stopConditionConfig) {
         this.stopConditionConfig = stopConditionConfig;
     }
 
-    public ResultAnalyzer.Config getResultAnalyzerConfig() {
+    public ResultAnalyzer.Config<SCORE,PROCESSRESULT> getResultAnalyzerConfig() {
         return resultAnalyzerConfig;
     }
 
-    public void setResultAnalyzerConfig(ResultAnalyzer.Config resultAnalyzerConfig) {
+    public void setResultAnalyzerConfig(ResultAnalyzer.Config<SCORE,PROCESSRESULT> resultAnalyzerConfig) {
         this.resultAnalyzerConfig = resultAnalyzerConfig;
     }
 
-    public ExecutionProgress.Config getExecutionProgressConfig() {
+    public ExecutionProgress.Config<SCORE,PROCESSRESULT> getExecutionProgressConfig() {
         return executionProgressConfig;
     }
 
-    public void setExecutionProgressConfig(ExecutionProgress.Config executionProgressConfig) {
+    public void setExecutionProgressConfig(ExecutionProgress.Config<SCORE,PROCESSRESULT> executionProgressConfig) {
         this.executionProgressConfig = executionProgressConfig;
     }
 

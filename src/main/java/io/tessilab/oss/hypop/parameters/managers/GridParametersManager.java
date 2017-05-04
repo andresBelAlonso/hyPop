@@ -42,12 +42,16 @@ import java.util.LinkedList;
  * 
  * 
  * @author Andres BEL ALONSO
+ * @param <SCORE> : The score of the process result
+ * @param <PROCESSRESULT> : The process result class
  */
-public class GridParametersManager extends ParametersManager {
+public class GridParametersManager<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        extends ParametersManager<SCORE,PROCESSRESULT> {
 
     private static final Logger LOGGER = LogManager.getLogger(GridParametersManager.class);
 
-    public static class Config extends ParametersManager.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ParametersManager.Config<SCORE,PROCESSRESULT> {
 
 
         private final int nbValsInInterval;
@@ -58,8 +62,8 @@ public class GridParametersManager extends ParametersManager {
         }
 
         @Override
-        protected GridParametersManager build() {
-            return new GridParametersManager(this.getInputParameters(), nbValsInInterval);
+        protected GridParametersManager<SCORE,PROCESSRESULT> build() {
+            return new GridParametersManager<>(this.getInputParameters(), nbValsInInterval);
         }
 
     }
@@ -144,7 +148,7 @@ public class GridParametersManager extends ParametersManager {
     }
 
     @Override
-    public void updateObserver(ProcessResult res) {
+    public void updateObserver(PROCESSRESULT res) {
         // Nothing to do , this parameters manager does not care about the results
     }
 
@@ -183,11 +187,11 @@ public class GridParametersManager extends ParametersManager {
                     .collect(Collectors.toCollection(LinkedList<ExecutionParametersSet>::new));                                                     
         } else {
             // the parameter has some subparameters
-            List<ExecutionParametersSet> resultSet = new LinkedList();
+            List<ExecutionParametersSet> resultSet = new LinkedList<>();
             List<ExecutionParameter> execParamList =  param.getPosibleValues(parameterDiffVals);
             for(ExecutionParameter curExecutionParameter : execParamList) {
                 // We look for each value if there is a subparameter
-                List<InputParameter> subParameters  = param.getAssociatedSubParams(curExecutionParameter.getValue());
+                List<InputParameter<?>> subParameters  = param.getAssociatedSubParams(curExecutionParameter.getValue());
                 if(subParameters.isEmpty()) {
                     // for this value there are not subparameters
                     resultSet.add(new ExecutionParametersSet(Arrays.asList(curExecutionParameter)));

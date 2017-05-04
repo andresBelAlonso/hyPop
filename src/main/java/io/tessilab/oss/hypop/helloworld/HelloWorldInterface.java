@@ -30,14 +30,14 @@ import java.util.Map;
  *
  * @author Andres BEL ALONSO
  */
-public class HelloWorldInterface implements ProcessInterface{
+public class HelloWorldInterface implements ProcessInterface<Double,HelloWorldResult>{
    
     // The config class. This class simply instanciated the HelloWorldInterface, 
     // and it is used by the main to create it
-    public static class Config extends ProcessInterface.Config {
+    public static class Config extends ProcessInterface.Config<Double,HelloWorldResult> {
 
         @Override
-        protected ProcessInterface build() {
+        protected HelloWorldInterface build() {
             return new HelloWorldInterface();
         }
         
@@ -67,7 +67,7 @@ public class HelloWorldInterface implements ProcessInterface{
     }
 
     @Override
-    public ProcessResult computeIt(ExecutionParametersSet params) {
+    public HelloWorldResult computeIt(ExecutionParametersSet params) {
         // We retrieve the parameters that will be use during this execution
         String target = (String) params.getExecParameter(new ParameterName("target")).getValue();
         String source = (String) params.getExecParameter(new ParameterName("source")).getValue();
@@ -116,7 +116,7 @@ public class HelloWorldInterface implements ProcessInterface{
     }
 
     @Override
-    public ProcessResult createResult(SaverAnswer jobDone) {
+    public HelloWorldResult createResult(SaverAnswer jobDone) {
         // We just build a new process result with
         return new HelloWorldResult(jobDone);
     }

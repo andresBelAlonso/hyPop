@@ -28,8 +28,11 @@ import org.apache.logging.log4j.LogManager;
  * Manager. This class is totally NOT thread safe.
  *
  * @author Andres BEL ALONSO
+ * @param <SCORE> : The score of the process result
+ * @param <PROCESSRESULT> : The process result class
  */
-public class GradientDescentParamManager extends ParametersManager {
+public class GradientDescentParamManager<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        extends ParametersManager<SCORE,PROCESSRESULT> {
     
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(GradientDescentParamManager.class);
 
@@ -121,7 +124,7 @@ public class GradientDescentParamManager extends ParametersManager {
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         throw new UnsupportedOperationException();
     }
 

@@ -26,23 +26,28 @@ import org.apache.logging.log4j.Logger;
  * (all the methods are mute, and do nothing, if you are not enought clever to 
  * understand it).
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of an execution
+ * @param <PROCESSRESULT> The class containing all the data about an execution
  */
-public class ShutUpMonitoring implements ExecutionProgress{
+public class ShutUpMonitoring<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> 
+        implements ExecutionProgress<SCORE,PROCESSRESULT>{
     
     private static final Logger LOGGER = LogManager.getLogger(ShutUpMonitoring.class);
 
     @Override
-    public void init(ParametersManager paramManager, StopCondition stopCondition) {
+    public void init(ParametersManager<SCORE,PROCESSRESULT> paramManager,
+            StopCondition<SCORE,PROCESSRESULT> stopCondition) {
         //this monitoring does not need an init
         // and for this monitoring, paramManager and stopCondition are not my friend... anymore
     }
 
     
-    public static class Config extends ExecutionProgress.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ExecutionProgress.Config<SCORE,PROCESSRESULT> {
 
         @Override
-        protected ExecutionProgress build() {
-            return new ShutUpMonitoring();
+        protected ExecutionProgress<SCORE,PROCESSRESULT> build() {
+            return new ShutUpMonitoring<>();
         }
         
     }
@@ -53,7 +58,7 @@ public class ShutUpMonitoring implements ExecutionProgress{
     }
     
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         // This class is borried about non usefull updates
     }
 }

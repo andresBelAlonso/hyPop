@@ -26,28 +26,32 @@ import java.util.List;
  * to allow to have different {@link io.tessilab.oss.hypop.execution.progress.ExecutionProgress}
  * during the execution. 
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of an execution
+ * @param <PROCESSRESULT> The class containing all the data about an execution
  */
-public class CompositeMonitoring implements ExecutionProgress{
+public class CompositeMonitoring<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        implements ExecutionProgress<SCORE,PROCESSRESULT>{
 
-    public static class Config extends ExecutionProgress.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ExecutionProgress.Config<SCORE,PROCESSRESULT> {
         
-        private final List<ExecutionProgress.Config> monitoringList;
+        private final List<ExecutionProgress.Config<SCORE,PROCESSRESULT>> monitoringList;
 
-        public Config(List<ExecutionProgress.Config> monitoringList) {
+        public Config(List<ExecutionProgress.Config<SCORE,PROCESSRESULT>> monitoringList) {
             this.monitoringList = monitoringList;
         }
         
 
         @Override
-        protected ExecutionProgress build() {
-            return new CompositeMonitoring(monitoringList); 
+        protected ExecutionProgress<SCORE,PROCESSRESULT> build() {
+            return new CompositeMonitoring<>(monitoringList); 
         }
         
     }
     
-    private final List<ExecutionProgress> execProgressList;
+    private final List<ExecutionProgress<SCORE,PROCESSRESULT>> execProgressList;
     
-    public CompositeMonitoring(List<ExecutionProgress.Config> configs) {
+    public CompositeMonitoring(List<ExecutionProgress.Config<SCORE,PROCESSRESULT>> configs) {
         execProgressList = new ArrayList<>();
         configs.stream().map(e -> {
             return e.synchroBuild();
@@ -62,12 +66,13 @@ public class CompositeMonitoring implements ExecutionProgress{
     }
 
     @Override
-    public void init(ParametersManager paramManager, StopCondition stopCondition) {
+    public void init(ParametersManager<SCORE,PROCESSRESULT> paramManager, 
+            StopCondition<SCORE,PROCESSRESULT> stopCondition) {
         execProgressList.stream().forEach(e -> e.init(paramManager, stopCondition));
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         execProgressList.stream().forEach(e -> e.updateObserver(obj));
     }
     

@@ -46,8 +46,11 @@ import java.util.List;
  * This class simply uses the {@link io.tessilab.oss.hypop.execution.ExecutionConfig} 
  * to build them an execute them. 
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of an excution
+ * @param <PROCESSRESULT> The class containing all the informations about one execution run
  */
-public class ExecutionRun implements Runnable, ParametrizedSubject<ProcessResult> {
+public class ExecutionRun<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>> 
+        implements Runnable,ParametrizedSubject<PROCESSRESULT> {
 
     private static final Logger LOGGER = LogManager.getLogger(ExecutionRun.class);
 
@@ -79,16 +82,16 @@ public class ExecutionRun implements Runnable, ParametrizedSubject<ProcessResult
 
     private final String executionID;
 
-    private ExecutionConfig config;
+    private final ExecutionConfig<SCORE,PROCESSRESULT> config;
 
-    private ProcessResult lastResult = null;
+    private PROCESSRESULT lastResult = null;
 
-    private final List<ParametrizedObserver> voyeurs;
+    private final List<ParametrizedObserver<PROCESSRESULT>> voyeurs;
 
-    public ExecutionRun(ExecutionConfig config) {
+    public ExecutionRun(ExecutionConfig<SCORE,PROCESSRESULT> config) {
         this.config = config;
         executionID = createID();
-        this.voyeurs = new LinkedList();
+        this.voyeurs = new LinkedList<>();
     }
 
     @Override
@@ -101,12 +104,12 @@ public class ExecutionRun implements Runnable, ParametrizedSubject<ProcessResult
         locker.setWaitTime(50);
 
         LOGGER.info("Building the interface with the problem");
-        ProcessInterface externalPb = config.buildProcessInterface();
+        ProcessInterface<SCORE,PROCESSRESULT> externalPb = config.buildProcessInterface();
 
         LOGGER.info("Building the paramaeters manager");
         InputParametersSet paramSet = externalPb.createInputParameters();
         config.getParamsConfig().setInputParameters(paramSet);
-        ParametersManager paramManager = config.buildParametersManager();
+        ParametersManager<SCORE,PROCESSRESULT> paramManager = config.buildParametersManager();
         this.attach(paramManager);
         
         LOGGER.info("Building the execution parameters filter");
@@ -114,19 +117,19 @@ public class ExecutionRun implements Runnable, ParametrizedSubject<ProcessResult
         ExecParametersFilterSet execParamsFilter = config.buildExecutionParamsFilter();
 
         LOGGER.info("Building the document saver");
-        ResultsSaver saver = config.buildResultsSaver();
+        ResultsSaver<SCORE,PROCESSRESULT> saver = config.buildResultsSaver();
 
         LOGGER.info("Building the stop condition");
-        StopCondition stopCondition = config.buildStopCondition();
-        ProcessResult res = null;
+        StopCondition<SCORE,PROCESSRESULT> stopCondition = config.buildStopCondition();
+        PROCESSRESULT res = null;
         this.attach(stopCondition);
 
         LOGGER.info("Builging the results analyzer");
-        ResultAnalyzer analyzer = config.buildResultAnalyzer();
+        ResultAnalyzer<SCORE,PROCESSRESULT> analyzer = config.buildResultAnalyzer();
         this.attach(analyzer);
 
         LOGGER.info("Building the progress follower");
-        ExecutionProgress progress = config.buildExecutionProgress();
+        ExecutionProgress<SCORE,PROCESSRESULT> progress = config.buildExecutionProgress();
         this.attach(progress);
         progress.init(paramManager, stopCondition);
         while (paramManager.hasJobsToExplore() && stopCondition.continueWork()) {
@@ -183,7 +186,7 @@ public class ExecutionRun implements Runnable, ParametrizedSubject<ProcessResult
      * method was getted, and there is not a lastResult(is null) an error is
      * throw.
      */
-    public ProcessResult getLastResult() {
+    public PROCESSRESULT getLastResult() {
         if (lastResult == null) {
             throw new HyperParameterSearchError("A last result was asked before it exists !");
         }
@@ -191,17 +194,17 @@ public class ExecutionRun implements Runnable, ParametrizedSubject<ProcessResult
     }
 
     @Override
-    public void notifyObservers(ProcessResult info) {
+    public void notifyObservers(PROCESSRESULT info) {
         this.voyeurs.forEach(e -> e.updateObserver(info));
     }
 
     @Override
-    public void attach(ParametrizedObserver<ProcessResult> observer) {
+    public void attach(ParametrizedObserver<PROCESSRESULT> observer) {
         this.voyeurs.add(observer);
     }
 
     @Override
-    public void removeObserver(ParametrizedObserver<ProcessResult> observer) {
+    public void removeObserver(ParametrizedObserver<PROCESSRESULT> observer) {
         this.voyeurs.remove(observer);
     }
 

@@ -43,13 +43,14 @@ public class HelloWorldMain {
         ElasticSearchBaseData saverData = new ElasticSearchBaseData("helloworld","127.0.0.1", 9300, "elasticsearch");
         
         // The configuration of the execution
-        ExecutionConfig config = new ExecutionConfig();
+        ExecutionConfig<Double,HelloWorldResult> config = new ExecutionConfig<>();
         
         //Here we set the support to lock the jobs, in this case ElasticSearch
         config.setLockerDao(new ElasticSearchDAO(esType, locksData));
         
         //We set the algorithm that will be use to select the parameters to execute
-        config.setParametersManagerConfig(new GridParametersManager.Config(0)); // The parameter does not make sense in this context
+        config.setParametersManagerConfig(new GridParametersManager.Config<>(0)); 
+// The parameter does not make sense in this context
         
         // We set the interface with hello world (the one we just writted before) 
         // to allow to the execution to run the hello world
@@ -59,21 +60,21 @@ public class HelloWorldMain {
         // we reach the max score. Here the max score is 1.0, because as we have
         // implemented in the process result, this will only happen when we will
         // find the target hello world message
-        config.setStopConditionConfig(new MaxScoreStopCondition.Config<Double>(1.0));
+        config.setStopConditionConfig(new MaxScoreStopCondition.Config<>(1.0));
         
         // We indicate that after the execution we want to print the 10 best results
         // on the standard output
-        config.setResultAnalyzerConfig(new NBetterResultsOutPrint.Config(10,System.out));
+        config.setResultAnalyzerConfig(new NBetterResultsOutPrint.Config<>(10,System.out));
         
         // Here we simply did not add any filter to the parameters gived by the parameter manager. 
         config.setExecParamsFiltersConfig(new AllConditionsMustBeTrue.Config());
         
         //Here we indicate that we do not want any kind of monitoring
-        config.setExecutionProgressConfig(new ShutUpMonitoring.Config());
+        config.setExecutionProgressConfig(new ShutUpMonitoring.Config<>());
         
         //Here we indicate that we are going to save the produced results in ElasticSearch
-        config.setResultsSaverConfig(new ElasticSearchResultSaver.Config(saverData,resultType));
-        ExecutionRun run = new ExecutionRun(config);
+        config.setResultsSaverConfig(new ElasticSearchResultSaver.Config<>(saverData,resultType));
+        ExecutionRun<Double,HelloWorldResult> run = new ExecutionRun<>(config);
         // You can also execute this in a threadpool
         run.run();
     }

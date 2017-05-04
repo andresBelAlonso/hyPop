@@ -38,12 +38,16 @@ import org.apache.logging.log4j.Logger;
  * and the {@link io.tessilab.oss.hypop.execution.stopCondition.StopCondition} have not 
  * a defined stop number, this bar will make not sense,but the program will run.
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of an excution
+ * @param <PROCESSRESULT> The class containing all the informations about one execution
  */
-public class PBarJobsToDoMonitoring implements ExecutionProgress {
+public class PBarJobsToDoMonitoring<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>>
+        implements ExecutionProgress<SCORE,PROCESSRESULT> {
     
     private static final Logger LOGGER = LogManager.getLogger(PBarJobsToDoMonitoring.class);
     
-    public static class Config extends ExecutionProgress.Config {
+    public static class Config<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ExecutionProgress.Config<SCORE,PROCESSRESULT> {
         
         private final ProgressBarStyle progressBarStyle;
         private final PrintStream printStream;
@@ -54,8 +58,8 @@ public class PBarJobsToDoMonitoring implements ExecutionProgress {
         }
 
         @Override
-        protected ExecutionProgress build() {
-            return new PBarJobsToDoMonitoring(progressBarStyle, printStream);
+        protected ExecutionProgress<SCORE,PROCESSRESULT> build() {
+            return new PBarJobsToDoMonitoring<>(progressBarStyle, printStream);
         }
         
     }
@@ -76,13 +80,14 @@ public class PBarJobsToDoMonitoring implements ExecutionProgress {
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         // A job has ended, increase the bar
         progressBar.stepBy(1);
     }
 
     @Override
-    public void init(ParametersManager paramManager, StopCondition stopCondition) {
+    public void init(ParametersManager<SCORE,PROCESSRESULT> paramManager,
+            StopCondition<SCORE,PROCESSRESULT> stopCondition) {
         // TODO : update this when they will be other conditions
         if(paramManager.getJobsTodo() == -1 && stopCondition.getJobsToDo() == -1) {
             LOGGER.warn("Progress could not be monitorize because the stop condition and the parameters manager does not depend on the number of jobs");

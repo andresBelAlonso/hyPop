@@ -26,12 +26,16 @@ import java.util.TreeMap;
  * passed in argument
  *
  * @author Andres BEL ALONSO
+ * @param <SCORE> : The score of the process result
+ * @param <PROCESSRESULT> : The process result class
  */
-public class NBetterResultsOutPrint implements ResultAnalyzer {
+public class NBetterResultsOutPrint<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        implements ResultAnalyzer<SCORE,PROCESSRESULT> {
 
 
 
-    public static class Config extends ResultAnalyzer.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ResultAnalyzer.Config<SCORE,PROCESSRESULT> {
 
         private final int nbResults;
         private final PrintStream printStream;
@@ -43,8 +47,8 @@ public class NBetterResultsOutPrint implements ResultAnalyzer {
         }
 
         @Override
-        protected ResultAnalyzer build() {
-            return new NBetterResultsOutPrint(nbResults, printStream);
+        protected ResultAnalyzer<SCORE,PROCESSRESULT> build() {
+            return new NBetterResultsOutPrint<>(nbResults, printStream);
         }
 
     }
@@ -53,13 +57,13 @@ public class NBetterResultsOutPrint implements ResultAnalyzer {
      * Constraint : 1) The map is limited to n elements
      *              2) If there is an entry on the map, there is a value on the list
      */
-    private final TreeMap<Comparable, List<ProcessResult>> map;
+    private final TreeMap<SCORE, List<PROCESSRESULT>> map;
     private final int n;
     private final PrintStream printStream;
 
     public NBetterResultsOutPrint(int n, PrintStream printStream) {
         this.n = n;
-        map = new TreeMap();
+        map = new TreeMap<>();
         this.printStream = printStream;
     }
 
@@ -67,8 +71,8 @@ public class NBetterResultsOutPrint implements ResultAnalyzer {
     public void analyseResults() {
         int totalSize = this.size();
         int i = totalSize > n?n:totalSize;
-        for (List<ProcessResult> resList : map.values()) {
-            for (ProcessResult res : resList) {
+        for (List<PROCESSRESULT> resList : map.values()) {
+            for (PROCESSRESULT res : resList) {
                 printStream.println("Result ranked #" + String.valueOf(i) + " SCORE : " + res.getResultScore().toString() + " PARAMETERS : " + res.getJobId());
                 i--;
             }
@@ -76,7 +80,7 @@ public class NBetterResultsOutPrint implements ResultAnalyzer {
     }
 
     @Override
-    public void updateObserver(ProcessResult newEntry) {
+    public void updateObserver(PROCESSRESULT newEntry) {
         if (this.size() < n) {
             //there is place to add
             addElementToMap(newEntry);
@@ -94,28 +98,26 @@ public class NBetterResultsOutPrint implements ResultAnalyzer {
      */
     public int getCachedElements() {
         int res = 0;
-        for (List<ProcessResult> entry : this.map.values()) {
-            res += entry.size();
-        }
+        res = this.map.values().stream().map((entry) -> entry.size()).reduce(res, Integer::sum);
         return res;
     }
     
-    private void addElementToMap(ProcessResult entry) {
+    private void addElementToMap(PROCESSRESULT entry) {
         // simply we add an element ASUMING that there is enought place
-        Comparable score = entry.getResultScore();
+        SCORE score = entry.getResultScore();
         if(this.map.containsKey(score)) {
             map.get(score).add(entry);
         } else {
-            List<ProcessResult> list = new LinkedList<>();
+            List<PROCESSRESULT> list = new LinkedList<>();
             list.add(entry);
             map.put(score,list);
         }
     }
     
-    private void removeOneEntry(Comparable key) {
+    private void removeOneEntry(SCORE key) {
         //Removes an entry from the key list
         // If an entry of the map would have a list, it is removed
-        List<ProcessResult> list = this.map.get(key);
+        List<PROCESSRESULT> list = this.map.get(key);
         list.remove(list.get(0));
         if(list.isEmpty()) {
             map.remove(key);
@@ -128,9 +130,7 @@ public class NBetterResultsOutPrint implements ResultAnalyzer {
      */
     public int size() {
         int counter = 0;
-        for(List<ProcessResult> list : this.map.values()) {
-            counter += list.size();
-        }
+        counter = this.map.values().stream().map((list) -> list.size()).reduce(counter, Integer::sum);
         return counter;
     }
 

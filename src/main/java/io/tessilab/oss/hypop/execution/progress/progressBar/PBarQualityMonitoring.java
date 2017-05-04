@@ -28,10 +28,14 @@ import java.io.PrintStream;
  * and after every execution the bar is updated.
  * 
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of an excution
+ * @param <PROCESSRESULT> The class containing all the informations about one execution
  */
-public class PBarQualityMonitoring implements ExecutionProgress {
+public class PBarQualityMonitoring<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>>
+        implements ExecutionProgress<SCORE,PROCESSRESULT> {
 
-    public static class Config extends ExecutionProgress.Config {
+    public static class Config<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ExecutionProgress.Config<SCORE,PROCESSRESULT> {
 
         private final ProgressBarStyle style;
         private final PrintStream printStream;
@@ -46,8 +50,8 @@ public class PBarQualityMonitoring implements ExecutionProgress {
         
 
         @Override
-        protected ExecutionProgress build() {
-            return new PBarQualityMonitoring(style, printStream, targetScore);
+        protected ExecutionProgress<SCORE,PROCESSRESULT> build() {
+            return new PBarQualityMonitoring<>(style, printStream, targetScore);
         }
 
     }
@@ -70,12 +74,13 @@ public class PBarQualityMonitoring implements ExecutionProgress {
     }
 
     @Override
-    public void init(ParametersManager paramManager, StopCondition stopCondition) {
+    public void init(ParametersManager<SCORE,PROCESSRESULT> paramManager,
+            StopCondition<SCORE,PROCESSRESULT> stopCondition) {
         progressBar = new ProgressBar(style, printStream, targetScore, "Quality progress bar");
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         long score = obj.getLongScoreRepresentation();
         if (score > bestScoreFound) {
             progressBar.stepBy((bestScoreFound - score) * -1);

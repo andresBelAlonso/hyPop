@@ -23,28 +23,32 @@ import java.util.List;
  * pplies the composite design pattern ( https://en.wikipedia.org/wiki/Composite_pattern )
  * to allow to have many {@link io.tessilab.oss.hypop.execution.stopCondition.StopCondition}
  * in the execution. 
+ * @param <SCORE> The score of the quality of an execution
+ * @param <PROCESSRESULT> The class containing all the information about a process result
  * @author Andres BEL ALONSO
  */
-public class CompositeStopCondition extends StopCondition{
+public class CompositeStopCondition<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>>
+        extends StopCondition<SCORE,PROCESSRESULT>{
     
-    public static class Config extends StopCondition.Config {
+    public static class Config<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>> 
+            extends StopCondition.Config<SCORE,PROCESSRESULT> {
         
-        private final List<StopCondition.Config> configList;
+        private final List<StopCondition.Config<SCORE,PROCESSRESULT>> configList;
 
-        public Config(List<StopCondition.Config> configList) {
+        public Config(List<StopCondition.Config<SCORE,PROCESSRESULT>> configList) {
             this.configList = configList;
         }
 
         @Override
-        protected StopCondition build() {
-            return new CompositeStopCondition(configList);
+        protected StopCondition<SCORE,PROCESSRESULT> build() {
+            return new CompositeStopCondition<>(configList);
         }
         
     }
     
-    private final List<StopCondition> stopConditions;
+    private final List<StopCondition<SCORE,PROCESSRESULT>> stopConditions;
     
-    public CompositeStopCondition(List<StopCondition.Config> configList) {
+    public CompositeStopCondition(List<StopCondition.Config<SCORE,PROCESSRESULT>> configList) {
         stopConditions = new ArrayList<>();
         configList.stream().map(e -> e.synchroBuild())
                 .forEach(e -> {stopConditions.add(e);});
@@ -53,7 +57,7 @@ public class CompositeStopCondition extends StopCondition{
     @Override
     public boolean continueWork() {
         // Continue only if all the conditions want to continue
-        for(StopCondition curStopCondition : stopConditions) {
+        for(StopCondition<SCORE,PROCESSRESULT> curStopCondition : stopConditions) {
             if(!curStopCondition.continueWork()) {
                 return false;
             }
@@ -65,7 +69,7 @@ public class CompositeStopCondition extends StopCondition{
     public int getJobsToDo() {
         //The lowest job to do that are not -1
         int jobsToDo = Integer.MAX_VALUE;
-        for(StopCondition curStopCondition : stopConditions) {
+        for(StopCondition<SCORE,PROCESSRESULT> curStopCondition : stopConditions) {
             int nbJobsToDo = curStopCondition.getJobsToDo();
             if(nbJobsToDo != -1 && nbJobsToDo<jobsToDo) {
                 jobsToDo = nbJobsToDo;
@@ -75,7 +79,7 @@ public class CompositeStopCondition extends StopCondition{
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         stopConditions.stream().forEach(e -> e.updateObserver(obj));
     }
     

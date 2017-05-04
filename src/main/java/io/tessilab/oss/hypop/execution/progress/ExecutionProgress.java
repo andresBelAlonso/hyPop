@@ -24,10 +24,14 @@ import io.tessilab.oss.openutils.designpatterns.observer.ParametrizedObserver;
 /**
  * The class that monitor the progress of the execution.
  * @author Andres BEL ALONSO
+ * @param <SCORE> The score of an execution
+ * @param <PROCESSRESULT> The class containing all the data about an execution
  */
-public interface ExecutionProgress extends ParametrizedObserver<ProcessResult>{
+public interface ExecutionProgress<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        extends ParametrizedObserver<PROCESSRESULT>{
     
-    public static abstract class Config extends BlockConfiguration<ExecutionProgress> {
+    public static abstract class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT 
+            extends ProcessResult<SCORE>> extends BlockConfiguration<ExecutionProgress<SCORE,PROCESSRESULT>> {
     }
     
     /**
@@ -44,6 +48,7 @@ public interface ExecutionProgress extends ParametrizedObserver<ProcessResult>{
      * @param paramManager : The parameter manager of the current execution
      * @param stopCondition : The conditin to stop the execution
      */
-    public void init(ParametersManager paramManager,StopCondition stopCondition);
+    public void init(ParametersManager<SCORE,PROCESSRESULT> paramManager,
+            StopCondition<SCORE,PROCESSRESULT> stopCondition);
   
 }

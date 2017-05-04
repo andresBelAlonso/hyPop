@@ -17,16 +17,19 @@ package io.tessilab.oss.hypop.results.saver;
 
 import io.tessilab.oss.hypop.execution.BlockConfiguration;
 import io.tessilab.oss.hypop.parameters.execution.ExecutionParametersSet;
+import io.tessilab.oss.hypop.results.ProcessResult;
 
 /**
  * The interface to access to the database, or other classes that ensure the 
  * saving of the results of each execution of the problem
  * @author Andres BEL ALONSO
- * @param <PROCESSRESULT> : The type of result to save
+ * @param <SCORE> : The score of an execution result
+ * @param <PROCESSRESULT> The class containing all the information about one execution
  */
-public interface ResultsSaver<PROCESSRESULT> {
+public interface ResultsSaver<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> {
     
-    public static abstract class Config extends BlockConfiguration<ResultsSaver> {
+    public static abstract class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends BlockConfiguration<ResultsSaver<SCORE,PROCESSRESULT>> {
     }
     
     /**

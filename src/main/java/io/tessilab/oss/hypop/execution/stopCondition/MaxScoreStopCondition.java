@@ -22,32 +22,35 @@ import org.apache.logging.log4j.Logger;
 /**
  * A stop condition that occurs when a target score has been reached. 
  * @author Andres BEL ALONSO
- * @param <T> : The type of element who will be compare
+ * @param <SCORE>
+ * @param <PROCESSRESULT>
  */
-public class MaxScoreStopCondition<T extends Comparable> extends StopCondition{
+public class MaxScoreStopCondition<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> 
+        extends StopCondition<SCORE,PROCESSRESULT>{
     
     private static final Logger LOGGER = LogManager.getLogger(MaxScoreStopCondition.class);
 
     
-    public static class Config<T extends Comparable> extends StopCondition.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends StopCondition.Config<SCORE,PROCESSRESULT> {
         
-        private final T objectiveScore;
+        private final SCORE objectiveScore;
 
-        public Config(T objectiveScore) {
+        public Config(SCORE objectiveScore) {
             this.objectiveScore = objectiveScore;
         }  
 
         @Override
-        protected StopCondition build() {
+        protected StopCondition<SCORE,PROCESSRESULT> build() {
             return new MaxScoreStopCondition<>(objectiveScore);
         }
 
     } 
     
-    private T bestScoreFound = null;
-    private final T objectiveScore;
+    private SCORE bestScoreFound = null;
+    private final SCORE objectiveScore;
 
-    public MaxScoreStopCondition(T objectiveScore) {
+    public MaxScoreStopCondition(SCORE objectiveScore) {
         this.objectiveScore = objectiveScore;
     }
 
@@ -67,9 +70,9 @@ public class MaxScoreStopCondition<T extends Comparable> extends StopCondition{
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         if(bestScoreFound == null || obj.getResultScore().compareTo(bestScoreFound)>0) {
-            this.bestScoreFound = (T) obj.getResultScore();
+            this.bestScoreFound = obj.getResultScore();
         }
     }
     

@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Andres BEL ALONSO
  * @param <SCORE> : the type of score
  */
-public interface ProcessResult<SCORE extends Comparable> {
+public interface ProcessResult<SCORE extends Comparable<SCORE>> {
     
     /**
      * 

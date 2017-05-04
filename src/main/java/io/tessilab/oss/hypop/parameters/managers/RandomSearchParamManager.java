@@ -31,10 +31,14 @@ import java.util.TreeMap;
 /**
  * A manager who simply gives random values for each parameter set. 
  * @author Andres BEL ALONSO
+ * @param <SCORE> : The score of the process result
+ * @param <PROCESSRESULT> : The process result class
  */
-public class RandomSearchParamManager extends ParametersManager{
+public class RandomSearchParamManager<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        extends ParametersManager<SCORE,PROCESSRESULT>{
     
-    public static class Config extends ParametersManager.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends ParametersManager.Config<SCORE,PROCESSRESULT> {
         
         private final int diffValues;
         
@@ -43,8 +47,8 @@ public class RandomSearchParamManager extends ParametersManager{
         }
 
         @Override
-        protected ParametersManager build() {
-            return new RandomSearchParamManager(this.getInputParameters(), diffValues);
+        protected ParametersManager<SCORE,PROCESSRESULT> build() {
+            return new RandomSearchParamManager<>(this.getInputParameters(), diffValues);
         }
         
     }
@@ -93,7 +97,7 @@ public class RandomSearchParamManager extends ParametersManager{
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         // do not care 
     }
      

@@ -22,7 +22,8 @@ import io.tessilab.oss.hypop.results.ProcessResult;
  * manager one. 
  * @author Andres BEL ALONSO
  */
-public class NoMoreStopCondition extends StopCondition{
+public class NoMoreStopCondition<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        extends StopCondition<SCORE,PROCESSRESULT>{
     
     public static class Config extends StopCondition.Config {
 
@@ -38,7 +39,7 @@ public class NoMoreStopCondition extends StopCondition{
     }
 
     @Override
-    public void updateObserver(ProcessResult obj) {
+    public void updateObserver(PROCESSRESULT obj) {
         // We do not care about new results
     }
 

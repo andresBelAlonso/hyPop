@@ -28,10 +28,14 @@ import io.tessilab.oss.openutils.designpatterns.observer.ParametrizedObserver;
  * What parameters give and when to give them are computed by this subclasses. 
  * 
  * @author Andres BEL ALONSO
+ * @param <SCORE> : The score of the process result
+ * @param <PROCESSRESULT> : The process result class
  */
-public abstract class ParametersManager implements ParametrizedObserver<ProcessResult>{
+public abstract class ParametersManager<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+        implements ParametrizedObserver<PROCESSRESULT>{
     
-    public static abstract class Config extends BlockConfiguration<ParametersManager> {
+    public static abstract class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
+            extends BlockConfiguration<ParametersManager<SCORE,PROCESSRESULT>> {
         
         private InputParametersSet inputParameters = null;
 
