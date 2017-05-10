@@ -22,6 +22,7 @@ import io.tessilab.oss.openutils.treedisplaying.TreeStructure;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -33,15 +34,17 @@ import java.util.stream.Collectors;
  * parameters to exists.
  *
  * @author Andres BEL ALONSO
- * @param <PARAM_TYPE> : the type of parameter of this object
+ * @param <PARAM_TYPE> : the type of parameter of this object that will be generated for the execution
  */
-public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputParameter>,TreeStructure {
+public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputParameter<PARAM_TYPE>>,TreeStructure {
     
     /**
      * The exception is throw we a non existing value of this parameter is associated
      * with this parameter
      */
     public static class NotValidParameterValue extends Exception {
+
+        private static final long serialVersionUID = 1L;
         public NotValidParameterValue() {
         }
 
@@ -53,14 +56,14 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
     }
 
     private final ParameterName parameterName;
-    protected final List<SubParameterRelationInput> subParameters;
+    protected final List<SubParameterRelationInput<PARAM_TYPE>> subParameters;
 
     /**
      *
      * @return a set with the depending suparameters or an empty list if it is a
      * leaf parameter
      */
-    public List<SubParameterRelationInput> getSubParameters() {
+    public List<SubParameterRelationInput<PARAM_TYPE>> getSubParameters() {
         return subParameters;
     }
 
@@ -72,7 +75,7 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
      * especially when the parameter maxvalues is lower than the number of 
      * different possible values
      */
-    public abstract List<ExecutionParameter> getPosibleValues(int maxValues);
+    public abstract List<ExecutionParameter<PARAM_TYPE>> getPosibleValues(int maxValues);
 
     /**
      *
@@ -115,7 +118,7 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final InputParameter other = (InputParameter) obj;
+        final InputParameter<?> other = (InputParameter) obj;
         if (!Objects.equals(this.parameterName, other.parameterName)) {
             return false;
         }
@@ -123,13 +126,13 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
     }
 
     @Override
-    public int compareTo(InputParameter o) {
+    public int compareTo(InputParameter<PARAM_TYPE> o) {
         return parameterName.compareTo(o.getParameterName());
     }
 
     public int getCompleteSize() {
         int size = 0;
-        for(SubParameterRelationInput subParam : subParameters) {
+        for(SubParameterRelationInput<PARAM_TYPE> subParam : subParameters) {
             size += subParam.getSubParameter().getCompleteSize();
         }
         return size;
@@ -143,23 +146,27 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
         return getSubParameters().isEmpty();
     }
     
-    public abstract void addSubparameter(InputParameter param,PARAM_TYPE value) throws NotValidParameterValue;
+    protected abstract void addSubparameter(InputParameter<?> param,PARAM_TYPE value)
+            throws NotValidParameterValue;
     
-    public void addSubparameter(InputParameter param,List<PARAM_TYPE> values) throws NotValidParameterValue {
+    protected void addSubparameter(InputParameter<?> param,List<PARAM_TYPE> values)
+            throws NotValidParameterValue {
         for(PARAM_TYPE val : values) {
             addSubparameter(param, val);
         }
     }
     
     /**
-     * 
-     * @param value The value to know to get the associated subparameters
+     * When calling this method with a set of posible values, is advice, to make a call with a 
+     * null value.
+     * @param execParam The value to know to get the associated subparameters
      * @return  the input parameters related to the value or an empty list if there are not. 
      */
-    public List<InputParameter> getAssociatedSubParams(PARAM_TYPE value) {
+    public List<InputParameter<?>> getAssociatedSubParams(ExecutionParameter<PARAM_TYPE> execParam) {
+        PARAM_TYPE value = execParam.containsARealValue()?execParam.getValue():null;
         return this.subParameters.stream()
-          .filter( e -> {
-              return ((SubParameterRelationInput) e).isFatherValue(value);
+          .filter( (e) -> {
+              return e.isFatherValue(Optional.ofNullable(value));
           }).map(SubParameterRelationInput::getSubParameter)
           .collect(Collectors.toList());
     }

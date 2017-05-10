@@ -54,7 +54,7 @@ public class CombatMonsterInterfacev03 extends CombatMonstersInterface{
     public static class Config extends CombatMonstersInterface.Config {
 
         @Override
-        protected ProcessInterface build() {
+        protected CombatMonsterInterfacev03 build() {
             return new CombatMonsterInterfacev03();
         }
         
@@ -64,12 +64,12 @@ public class CombatMonsterInterfacev03 extends CombatMonstersInterface{
     public InputParametersSet createInputParameters() {
         InputParametersSet params = new InputParametersSet();
         try {
-            InputParameter ad = new IntegerInterval(0, 600, adName, true, true);
-            InputParameter ap = new IntegerInterval(0, 600, apName, true, true);
-            InputParameter ar = new IntegerInterval(0, 600, arName, true, true);
-            InputParameter mr = new IntegerInterval(0, 600, mrName, true, true);
-            InputParameter attackSpeed = new IntegerInterval(0, 600, attackSpeedName, true, true);
-            InputParameter health = new IntegerInterval(0, 600, healthName, true, true);
+            InputParameter<Integer> ad = new IntegerInterval(0, 600, adName, true, true);
+            InputParameter<Integer> ap = new IntegerInterval(0, 600, apName, true, true);
+            InputParameter<Integer> ar = new IntegerInterval(0, 600, arName, true, true);
+            InputParameter<Integer> mr = new IntegerInterval(0, 600, mrName, true, true);
+            InputParameter<Integer> attackSpeed = new IntegerInterval(0, 600, attackSpeedName, true, true);
+            InputParameter<Integer> health = new IntegerInterval(0, 600, healthName, true, true);
             
             Map<String,CombatObject> objectsSet = new HashMap<>();
             DummyCombatObject dummy = new DummyCombatObject(); 
@@ -80,7 +80,7 @@ public class CombatMonsterInterfacev03 extends CombatMonstersInterface{
             objectsSet.put(scetre.objectName(),scetre);
             Sword sword = new Sword(new DummySpell());
             objectsSet.put(sword.objectName(),sword);
-            InputParameter object = new NominativeInputParameter(combatObj, objectsSet);
+            InputParameter<? super CombatObject> object = new NominativeInputParameter<>(combatObj, objectsSet);
 
             Map<String,MagicStone> magicStonesSet = new HashMap<>();
             BlueStone blueStone = new BlueStone();
@@ -91,7 +91,8 @@ public class CombatMonsterInterfacev03 extends CombatMonstersInterface{
             magicStonesSet.put(stone.getImprovementName(),stone);
             DummyStone dummyStone = new DummyStone();
             magicStonesSet.put(dummyStone.getImprovementName(),dummyStone);
-            InputParameter magicStone = new NominativeInputParameter(this.magicStoneName, magicStonesSet);
+            InputParameter<? super MagicStone> magicStone = 
+                    new NominativeInputParameter<>(this.magicStoneName, magicStonesSet);
 
             Map<String,Enchantment> enchantmentSet = new HashMap<>();
             DummySpell dummySpell = new DummySpell();
@@ -102,7 +103,8 @@ public class CombatMonsterInterfacev03 extends CombatMonstersInterface{
             enchantmentSet.put(spellSexy.getImprovementName(),spellSexy);
             SpellOfTheTwo spell2 = new SpellOfTheTwo();
             enchantmentSet.put(spell2.getImprovementName(),spell2);
-            InputParameter spells = new NominativeInputParameter(spellName, enchantmentSet);
+            InputParameter<? super Enchantment> spells = 
+                    new NominativeInputParameter<>(spellName, enchantmentSet);
             // Adding the parameters
             params.addParameter(ad);
             params.addParameter(ap);

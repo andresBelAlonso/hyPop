@@ -83,7 +83,7 @@ public class GradientDescentParamManager<SCORE extends Comparable<SCORE>,PROCESS
     }
 
     @Override
-    public ExecutionParametersSet getNonBuildParameters() {
+    protected ExecutionParametersSet doGetNonBuildParameters() {
         if (!gradient.isAlreadyComputed()) {
             if (gradient.hasJobsToGive()) {
                 return gradient.getParameterToCompute();

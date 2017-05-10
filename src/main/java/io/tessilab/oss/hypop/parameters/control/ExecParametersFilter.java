@@ -32,6 +32,6 @@ public interface ExecParametersFilter {
      * @param parameters  The parameters of the execution
      * @return true if the parameters values are valid
      */
-    public boolean isValidExecutionParameter(Map<ParameterName,ExecutionParameter> parameters);
+    public boolean isValidExecutionParameter(Map<ParameterName,ExecutionParameter<?>> parameters);
     
 }

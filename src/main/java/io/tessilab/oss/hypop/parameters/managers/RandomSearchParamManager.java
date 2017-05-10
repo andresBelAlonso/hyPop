@@ -53,19 +53,19 @@ public class RandomSearchParamManager<SCORE extends Comparable<SCORE>,PROCESSRES
         
     }
     
-    private final Map<ParameterName,List<ExecutionParameter>> possibleValues;
+    private final Map<ParameterName,List<? extends ExecutionParameter<?>>> possibleValues;
     private final Random randomGenerator;
     
 
     /**
      * 
-     * @param params
-     * @param diffValues : the number of different values that are going to be use
+     * @param params The parameter set
+     * @param diffValues  the number of different values that are going to be use
      */
     public RandomSearchParamManager(InputParametersSet params, int diffValues) {
         super(params);
         possibleValues = new TreeMap<>();
-        for(InputParameter param : params.getAllParameters()) {
+        for(InputParameter<?> param : params.getAllParameters()) {
             possibleValues.put(param.getParameterName(), 
                     param.getPosibleValues(param.nbValues()==-1?diffValues:param.nbValues()));
         }
@@ -78,9 +78,9 @@ public class RandomSearchParamManager<SCORE extends Comparable<SCORE>,PROCESSRES
     }
 
     @Override
-    public ExecutionParametersSet getNonBuildParameters() {
+    protected ExecutionParametersSet doGetNonBuildParameters() {
         List<ExecutionParametersSet> execParams = new LinkedList<>();
-        for(InputParameter inputParam : this.params.getIndependentParameters()) {
+        for(InputParameter<?> inputParam : this.params.getIndependentParameters()) {
             execParams.add(computeParameterAndSubParams(inputParam));
         }     
         return new ExecutionParametersSet(execParams,true);
@@ -101,14 +101,14 @@ public class RandomSearchParamManager<SCORE extends Comparable<SCORE>,PROCESSRES
         // do not care 
     }
      
-    public ExecutionParametersSet computeParameterAndSubParams(InputParameter<Object> param) {
+    public<T> ExecutionParametersSet computeParameterAndSubParams(InputParameter<T> param) {
         ExecutionParametersSet parametersSet = new ExecutionParametersSet();
-        List<ExecutionParameter> values = this.possibleValues.get(param.getParameterName());
-        ExecutionParameter execParam = values.get(randomGenerator.nextInt(values.size()));
+        List<ExecutionParameter<T>> values = (List<ExecutionParameter<T>>) this.possibleValues.get(param.getParameterName());
+        ExecutionParameter<T> execParam = values.get(randomGenerator.nextInt(values.size()));
         parametersSet.addParameter(execParam);
         //Add the subparameters
         List<ExecutionParametersSet> executionParam = new LinkedList<>();
-        for(InputParameter subParam : param.getAssociatedSubParams(execParam.getValue()))  {
+        for(InputParameter<?> subParam : param.getAssociatedSubParams(execParam))  {
             executionParam.add(computeParameterAndSubParams(subParam));
         }
         executionParam.stream().forEach(e -> {

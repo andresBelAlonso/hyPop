@@ -43,11 +43,11 @@ public class NominativeInputParameter<T> extends InputParameter<T> {
     }
 
     @Override
-    public List<ExecutionParameter> getPosibleValues(int maxValues) {
-        List<ExecutionParameter> res = new LinkedList();
-        for(Map.Entry<String,T> entry: values.entrySet()) {
-            res.add(new ExecutionParameter(this.getParameterName(), entry.getValue(),entry.getKey()));
-        }
+    public List<ExecutionParameter<T>> getPosibleValues(int maxValues) {
+        List<ExecutionParameter<T>> res = new LinkedList<>();
+        values.entrySet().forEach((entry) -> {
+            res.add(new ExecutionParameter<>(this.getParameterName(), entry.getValue(),entry.getKey()));
+        });
         return res;
     }
 
@@ -57,11 +57,10 @@ public class NominativeInputParameter<T> extends InputParameter<T> {
     }
 
     @Override
-    public void addSubparameter(InputParameter param, T value) throws NotValidParameterValue {
+    protected void addSubparameter(InputParameter<?> param, T value) throws NotValidParameterValue {
         if(!this.values.containsValue(value)) {
             throw new NotValidParameterValue("The value passed in argument is not a possible value of this parameter ");
         }
         this.subParameters.add(new SingleSubParameterRelationInput<>(value,param,this.getParameterName()));
     }
-    
 }

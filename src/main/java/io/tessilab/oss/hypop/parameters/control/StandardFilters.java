@@ -15,6 +15,7 @@
  */
 package io.tessilab.oss.hypop.parameters.control;
 
+import io.tessilab.oss.hypop.exceptions.HyperParameterSearchError;
 import io.tessilab.oss.hypop.parameters.ParameterName;
 import io.tessilab.oss.hypop.parameters.execution.ExecutionParameter;
 import java.util.List;
@@ -28,44 +29,55 @@ import java.util.Map;
 public class StandardFilters {
 
     /**
-     * Creates a filter who filters integer values and returns true only if all
-     * the parameters exists AND they are less than maxValue
+     * Creates a filter who filters integer values and returns true only if all the parameters exists AND they are less
+     * than maxValue
      *
      * @param params A list with all the names of the parameters
      * @param maxValue the maximun value than a parameter can take
      * @return The filter that makes this
      */
     public static ExecParametersFilter integersLesThanN(List<ParameterName> params, int maxValue) {
-        return (Map<ParameterName, ExecutionParameter> e) -> {
+        return (Map<ParameterName, ExecutionParameter<?>> e) -> {
             int counter = 0;
             for (ParameterName param : params) {
                 if (!e.containsKey(param)) {
                     return false;
                 }
-                counter += (int) e.get(param).getValue();
+                ExecutionParameter<?> execParam = e.get(param);
+                if (!(execParam.getValue() instanceof Integer)) {
+                    throw new HyperParameterSearchError("A filter over integer values is applied in parameters that "
+                            + "are not integers");
+
+                }
+                counter += (Integer) execParam.getValue();
             }
             return counter < maxValue;
         };
     }
 
     /**
-     * Creates a filter that returns true only if the value is equal to some
-     * value, with some tolerance. If a parameter does not exists, it returns
-     * false
+     * Creates a filter that returns true only if the value is equal to some value, with some tolerance. If a parameter
+     * does not exists, it returns false
      *
      * @param params The names of the parameters to filter
-     * @param targetValue  The value of the sum of all parameters
+     * @param targetValue The value of the sum of all parameters
      * @param tolerance The tolerance over the sum of all values
      * @return The filter that does this
      */
     public static ExecParametersFilter doubleEqualToN(List<ParameterName> params, double targetValue, double tolerance) {
-        return (Map<ParameterName, ExecutionParameter> e) -> {
+        return (Map<ParameterName, ExecutionParameter<?>> e) -> {
             double counter = 0;
             for (ParameterName param : params) {
                 if (!e.containsKey(param)) {
                     return false;
                 }
-                counter += (double) e.get(param).getValue();
+                ExecutionParameter<?> execParam = e.get(param);
+                if (!(execParam.getValue() instanceof Double)) {
+                    throw new HyperParameterSearchError("A filter over double values is applied in parameters that "
+                            + "are not a double");
+
+                }
+                counter += (Double) e.get(param).getValue();
             }
             return counter > targetValue - tolerance && counter < targetValue + tolerance;
         };

@@ -17,31 +17,29 @@ package io.tessilab.oss.hypop.parameters.subparameters;
 
 import io.tessilab.oss.hypop.parameters.ParameterName;
 import io.tessilab.oss.hypop.parameters.input.InputParameter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * The relation between n values of the father parameter and a subparameter
+ *
  * @author Andres BEL ALONSO
  */
-public class MultipleSubParametersRelationInput<T> implements SubParameterRelationInput<T>{
+public class BooleanSubParameterRelation<T> implements SubParameterRelationInput<T>{
     
-    private final List<T> fatherValues;
-    
+    private final ParameterName fatherParamName;
     private final InputParameter<?> subParameter;
+    private final boolean present;
+    private final T fatherBaseValue;
     
-    private final ParameterName fatherParameterName;
-
-    public MultipleSubParametersRelationInput(List<T> fatherValues, InputParameter<?> subParameter,ParameterName fatherParameterName) {
-        this.fatherValues = fatherValues;
+    public BooleanSubParameterRelation(boolean presence, ParameterName fatherParamName, T fatherBaseValue,
+            InputParameter<?> subParameter) {
+        this.fatherParamName = fatherParamName;
         this.subParameter = subParameter;
-        this.fatherParameterName = fatherParameterName;
+        this.present = presence;
+        this.fatherBaseValue = fatherBaseValue;
     }
 
-    @Override
-    public List<T> getFatherValues(int maxValues) {
-        return fatherValues;
-    }
 
     @Override
     public InputParameter<?> getSubParameter() {
@@ -50,28 +48,35 @@ public class MultipleSubParametersRelationInput<T> implements SubParameterRelati
 
     @Override
     public int maxFatherValues() {
-        return fatherValues.size();
+        return 1;
     }
-
 
     @Override
     public ParameterName getFatherParamName() {
-        return fatherParameterName;
+        return this.fatherParamName;
     }
 
     @Override
-    public boolean isFatherValue(Optional<T> optionalValue) {
-        if(!optionalValue.isPresent()) {
-            return false;
+    public boolean isFatherValue(Optional<T> value) {
+        if(value.isPresent()) {
+            // maybe the second component of the present is not needed.
+            return present && value.get().equals(fatherBaseValue);
+        } else {
+            return !present;
         }
-        T value = optionalValue.get();
-        for(T fatherVal : this.fatherValues) {
-            if(fatherVal.equals(value)) {
-                return true;
-            }
-        }
-        return false;
     }
+
+    @Override
+    public List<T> getFatherValues(int maxValues) {
+        List<T> resList = new ArrayList<>(1);
+        if(maxValues <= 0) {
+            return resList;
+        }
+        resList.add(fatherBaseValue);
+        return resList;
+    }
+
+    
 
     
 }

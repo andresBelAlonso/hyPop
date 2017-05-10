@@ -54,12 +54,12 @@ import org.apache.logging.log4j.LogManager;
  * with a simple testing problem. 
  * @author Andres BEL ALONSO
  */
-public class CombatMonstersInterface implements ProcessInterface {
+public class CombatMonstersInterface implements ProcessInterface<Double,CombatMonstersInterface.MonsterExecutionResult> {
 
-    public static class Config extends ProcessInterface.Config {
+    public static class Config extends ProcessInterface.Config<Double,CombatMonstersInterface.MonsterExecutionResult> {
 
         @Override
-        protected ProcessInterface build() {
+        protected CombatMonstersInterface build() {
             return new CombatMonstersInterface();
         }
 
@@ -116,7 +116,7 @@ public class CombatMonstersInterface implements ProcessInterface {
     protected final ParameterName spellName = new ParameterName("spell");
 
     @Override
-    public ProcessResult computeIt(ExecutionParametersSet params) {
+    public MonsterExecutionResult computeIt(ExecutionParametersSet params) {
         try {
             Monster curMonster = buildMonster(params);
             BattleInfo res = Arena.fight(curMonster, REF_MONSTER);
@@ -152,12 +152,12 @@ public class CombatMonstersInterface implements ProcessInterface {
 //            vals.add(400);
 //            vals.add(500);
 //            vals.add(600);
-            NominativeInputParameter ad = new NominativeInputParameter(adName, vals);
-            NominativeInputParameter ap = new NominativeInputParameter(apName, vals);
-            NominativeInputParameter mr = new NominativeInputParameter(mrName, vals);
-            NominativeInputParameter ar = new NominativeInputParameter(arName, vals);
-            NominativeInputParameter attackSpeed = new NominativeInputParameter(attackSpeedName, vals);
-            NominativeInputParameter health = new NominativeInputParameter(healthName, vals);
+            NominativeInputParameter<Integer> ad = new NominativeInputParameter<>(adName, vals);
+            NominativeInputParameter<Integer> ap = new NominativeInputParameter<>(apName, vals);
+            NominativeInputParameter<Integer> mr = new NominativeInputParameter<>(mrName, vals);
+            NominativeInputParameter<Integer> ar = new NominativeInputParameter<>(arName, vals);
+            NominativeInputParameter<Integer> attackSpeed = new NominativeInputParameter<>(attackSpeedName, vals);
+            NominativeInputParameter<Integer> health = new NominativeInputParameter<>(healthName, vals);
             Map<String,CombatObject> objectsSet = new HashMap<>();
             DummyCombatObject dummy = new DummyCombatObject(); 
             objectsSet.put(dummy.objectName(),dummy);
@@ -167,7 +167,7 @@ public class CombatMonstersInterface implements ProcessInterface {
             objectsSet.put(scetre.objectName(),scetre);
             Sword sword = new Sword(new DummySpell());
             objectsSet.put(sword.objectName(),sword);
-            InputParameter object = new NominativeInputParameter(combatObj, objectsSet);
+            InputParameter<? super CombatObject> object = new NominativeInputParameter<>(combatObj, objectsSet);
 
             Map<String,MagicStone> magicStonesSet = new HashMap<>();
             BlueStone blueStone = new BlueStone();
@@ -178,7 +178,7 @@ public class CombatMonstersInterface implements ProcessInterface {
             magicStonesSet.put(stone.getImprovementName(),stone);
             DummyStone dummyStone = new DummyStone();
             magicStonesSet.put(dummyStone.getImprovementName(),dummyStone);
-            InputParameter magicStone = new NominativeInputParameter(this.magicStoneName, magicStonesSet);
+            InputParameter<? extends MagicStone> magicStone = new NominativeInputParameter<>(this.magicStoneName, magicStonesSet);
 
             Map<String,Enchantment> enchantmentSet = new HashMap<>();
             DummySpell dummySpell = new DummySpell();
@@ -189,7 +189,7 @@ public class CombatMonstersInterface implements ProcessInterface {
             enchantmentSet.put(spellSexy.getImprovementName(),spellSexy);
             SpellOfTheTwo spell2 = new SpellOfTheTwo();
             enchantmentSet.put(spell2.getImprovementName(),spell2);
-            InputParameter spells = new NominativeInputParameter(spellName, enchantmentSet);
+            InputParameter<? extends Enchantment> spells = new NominativeInputParameter<>(spellName, enchantmentSet);
             // Adding the parameters
             params.addParameter(ad);
             params.addParameter(ap);
@@ -215,7 +215,7 @@ public class CombatMonstersInterface implements ProcessInterface {
     }
 
     @Override
-    public ProcessResult createResult(SaverAnswer jobDone) {
+    public MonsterExecutionResult createResult(SaverAnswer jobDone) {
         // TODO  : if job done does not contain the data?
         return new MonsterExecutionResult((double) jobDone.getValue(CombatMonstersInterface.MonsterExecutionResult.BATTLE_SCORE_NAME),
                 jobDone.getJobId());
@@ -223,12 +223,12 @@ public class CombatMonstersInterface implements ProcessInterface {
 
     private Monster buildMonster(ExecutionParametersSet set) {
         
-        int ad = (int) set.getExecParameter(adName).getValue();
-        int ap = (int) set.getExecParameter(apName).getValue();
-        int mr = (int) set.getExecParameter(mrName).getValue();
-        int ar = (int) set.getExecParameter(arName).getValue();
-        int attackSpeed = (int) set.getExecParameter(attackSpeedName).getValue();
-        int health = (int) set.getExecParameter(healthName).getValue();
+        int ad = (Integer) set.getExecParameter(adName).getValue();
+        int ap = (Integer) set.getExecParameter(apName).getValue();
+        int mr = (Integer) set.getExecParameter(mrName).getValue();
+        int ar = (Integer) set.getExecParameter(arName).getValue();
+        int attackSpeed = (Integer) set.getExecParameter(attackSpeedName).getValue();
+        int health = (Integer) set.getExecParameter(healthName).getValue();
         return new Monster(ad,ap,mr,ar,attackSpeed,health,getObject(set));
     }
 

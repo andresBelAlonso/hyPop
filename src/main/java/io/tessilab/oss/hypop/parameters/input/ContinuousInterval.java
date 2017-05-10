@@ -17,7 +17,6 @@ package io.tessilab.oss.hypop.parameters.input;
 
 import io.tessilab.oss.hypop.parameters.ParameterName;
 import io.tessilab.oss.hypop.parameters.execution.ExecutionParameter;
-import io.tessilab.oss.hypop.parameters.subparameters.ContinuousIntervalSubParamRelation;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,20 +25,20 @@ import java.util.List;
  * The parameter who is represented by a real continous interval.
  * @author Andres BEL ALONSO
  */
-public class ContinuousInterval extends Interval<Double,ContinuousInterval>{
+public class ContinuousInterval extends Interval<Double>{
 
     public ContinuousInterval(Double lowerBorder, Double higherBorder, ParameterName paramName, boolean includeLower, boolean includeHigher) throws EmptyInterval {
         super(lowerBorder, higherBorder, paramName, includeLower, includeHigher);
     }
 
     @Override
-    public List<ExecutionParameter> getPosibleValues(int maxValues) {
+    public List<ExecutionParameter<Double>> getPosibleValues(int maxValues) {
         // case maxvalues = 1
         if(maxValues == 0) {
             return new LinkedList<>();
         } else if(maxValues == 1) {
             double val = (this.higherBorder + lowerBorder)/2;
-            return Arrays.asList(new ExecutionParameter(this.getParameterName(), 
+            return Arrays.asList(new ExecutionParameter<>(this.getParameterName(), 
                     val, 
                     String.valueOf(val)));
         }
@@ -63,10 +62,10 @@ public class ContinuousInterval extends Interval<Double,ContinuousInterval>{
             i = 1;
             maxVal = maxValues;
         }
-        List<ExecutionParameter> res = new LinkedList<>();
+        List<ExecutionParameter<Double>> res = new LinkedList<>();
         while(res.size() < maxValues ) {
             double val = lowerBorder + i * step;
-            res.add(new ExecutionParameter(this.getParameterName(), val, String.valueOf(val)));
+            res.add(new ExecutionParameter<>(this.getParameterName(), val, String.valueOf(val)));
             i++;
         }
         return res;
@@ -75,14 +74,6 @@ public class ContinuousInterval extends Interval<Double,ContinuousInterval>{
     @Override
     public int nbValues() {
         return -1;
-    }
-
-    @Override
-    public void addSubparameter(InputParameter param, ContinuousInterval value) throws NotValidParameterValue {
-        if(!this.isIncludedInterval(value)) {
-            throw new NotValidParameterValue("The interval is not included in this interval");
-        }
-        this.subParameters.add(new ContinuousIntervalSubParamRelation(value, param));
     }
 
 

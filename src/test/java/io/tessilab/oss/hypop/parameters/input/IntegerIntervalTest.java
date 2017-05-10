@@ -51,20 +51,20 @@ public class IntegerIntervalTest {
     @Test
     public void testFullInterval() throws Interval.EmptyInterval {
         setUp();
-        List<ExecutionParameter> execParams = closeInterval.getPosibleValues(12);
+        List<ExecutionParameter<Integer>> execParams = closeInterval.getPosibleValues(12);
         assertEquals(11, execParams.size());
         for (int i = 0; i < 11; i++) {
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("close"), i, String.valueOf(i))));
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("close"), i, String.valueOf(i))));
         }
         execParams = openInterval.getPosibleValues(9);
         assertEquals(9, execParams.size());        
         for(int i=1; i<10; i++) {
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("open"), i, String.valueOf(i))));           
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("open"), i, String.valueOf(i))));           
         }
         execParams = halfInterval.getPosibleValues(12);
         assertEquals(10, execParams.size());         
         for(int i=1; i<11; i++) {
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("half"), i, String.valueOf(i))));            
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("half"), i, String.valueOf(i))));            
         }
         IntegerInterval hugeInteverval = new IntegerInterval(0, 100000, new ParameterName("huge"), true, true);
         execParams = hugeInteverval.getPosibleValues(10000);
@@ -74,13 +74,13 @@ public class IntegerIntervalTest {
     @Test
     public void testPartInterval() throws Interval.EmptyInterval {
         setUp();
-        List<ExecutionParameter> execParams = closeInterval.getPosibleValues(8);
+        List<ExecutionParameter<Integer>> execParams = closeInterval.getPosibleValues(8);
         assertEquals(8, execParams.size());
         for (int i = 0; i < 10; i++) {
             if(i==4 || i==9 ) {
                 continue;
             }
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("close"), i, String.valueOf(i))));
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("close"), i, String.valueOf(i))));
         }
     }
 

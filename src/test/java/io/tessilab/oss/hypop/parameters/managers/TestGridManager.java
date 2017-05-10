@@ -53,15 +53,15 @@ public class TestGridManager {
 
     public void setUp() throws Interval.EmptyInterval, InputParameter.NotValidParameterValue {
         inputParams = new InputParametersSet();
-        Map values = new HashMap();
+        Map<String,String> values = new HashMap<>();
         values.put("knn","knn");
         values.put("random forest","random forest");
         values.put("dummy classifier","dummy classifier");
-        InputParameter classifierParameter = new NominativeInputParameter(classifierName, values);
-        InputParameter kParam = new IntegerInterval(1, 30, kParamName, true, true);
-        InputParameter minToKnow = new ContinuousInterval(0.0, 1.0, minToKnowName, true, true);
-        InputParameter selectedParamsPart = new ContinuousInterval(0.0, 1.0, selectedParamsName, true, true);
-        InputParameter forestSize = new IntegerInterval(11, 150, forestSizeName, true, true);
+        InputParameter<String> classifierParameter = new NominativeInputParameter<>(classifierName, values);
+        InputParameter<Integer> kParam = new IntegerInterval(1, 30, kParamName, true, true);
+        InputParameter<Double> minToKnow = new ContinuousInterval(0.0, 1.0, minToKnowName, true, true);
+        InputParameter<Double> selectedParamsPart = new ContinuousInterval(0.0, 1.0, selectedParamsName, true, true);
+        InputParameter<Integer> forestSize = new IntegerInterval(11, 150, forestSizeName, true, true);
         //Adding the parameters
         inputParams.addParameter(kParam);
         inputParams.addParameter(classifierParameter);
@@ -79,21 +79,21 @@ public class TestGridManager {
     @Test
     public void testJobComputing() throws Interval.EmptyInterval, InputParameter.NotValidParameterValue {
         setUp();
-        GridParametersManager parametersManager = new GridParametersManager(inputParams, 10);
+        GridParametersManager<?,?> parametersManager = new GridParametersManager<>(inputParams, 10);
         assertEquals(14301, parametersManager.getNbRemainingExecutions());
     }
 
     @Test
     public void testSimpleJobComputing() throws Interval.EmptyInterval, InputParameter.NotValidParameterValue {
         setUp();
-        GridParametersManager manager = new GridParametersManager(inputParams, 10);
+        GridParametersManager<?,?> manager = new GridParametersManager<>(inputParams, 10);
         assertEquals(14301, manager.getNbRemainingExecutions());
         // verify the parameters
         while (manager.hasJobsToExplore()) {
             ExecutionParametersSet execParams = manager.getNonBuildParameters();
             verifyBasicParameters(execParams);
             // depending on the classifier, we verify that all the parameters exist
-            ExecutionParameter classifier = execParams.getExecParameter(classifierName);
+            ExecutionParameter<?> classifier = execParams.getExecParameter(classifierName);
             if ("knn".equals(classifier.getValue())) {
                 if (!execParams.containsParameter(kParamName) || !execParams.containsParameter(minToKnowName)) {
                     fail("The parameters are not complete : there is a knn without a kParam");
@@ -123,10 +123,10 @@ public class TestGridManager {
         ParameterName param2Name = new ParameterName("param2");
         ParameterName param3Name = new ParameterName("param3");
         ParameterName param4Name = new ParameterName("param4");
-        InputBooleanParameter param1 = new InputBooleanParameter(param1Name, "hola", "hola");
-        InputBooleanParameter param2 = new InputBooleanParameter(param2Name, "que", "que");
-        InputBooleanParameter param3 = new InputBooleanParameter(param3Name, "ase", "ase");
-        InputBooleanParameter param4 = new InputBooleanParameter(param4Name, "folla uste", "folla uste");
+        InputBooleanParameter<String> param1 = new InputBooleanParameter<>(param1Name, "hola", "hola");
+        InputBooleanParameter<String> param2 = new InputBooleanParameter<>(param2Name, "que", "que");
+        InputBooleanParameter<String> param3 = new InputBooleanParameter<>(param3Name, "ase", "ase");
+        InputBooleanParameter<String> param4 = new InputBooleanParameter<>(param4Name, "folla uste", "folla uste");
         
         InputParametersSet parameterSet = new InputParametersSet();
         parameterSet.addParameter(param1);
@@ -134,9 +134,9 @@ public class TestGridManager {
         parameterSet.addParameter(param3);
         parameterSet.addParameter(param4);
         parameterSet.addRelation(param2, true, param3);
-        parameterSet.addRelation(param2, false,param4);
+        parameterSet.addRelation(param2, false, param4);
         
-        ParametersManager paramManager = new GridParametersManager(parameterSet, 0);
+        ParametersManager<?,?> paramManager = new GridParametersManager<>(parameterSet, 0);
         
         assertEquals(8, paramManager.getJobsTodo());
         

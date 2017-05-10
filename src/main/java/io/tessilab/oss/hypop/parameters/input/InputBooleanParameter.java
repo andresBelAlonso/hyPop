@@ -18,6 +18,7 @@ package io.tessilab.oss.hypop.parameters.input;
 import io.tessilab.oss.hypop.parameters.ParameterName;
 import io.tessilab.oss.hypop.parameters.execution.ExecutionParameter;
 import io.tessilab.oss.hypop.parameters.execution.NoContentExecutionParameter;
+import io.tessilab.oss.hypop.parameters.subparameters.BooleanSubParameterRelation;
 import io.tessilab.oss.hypop.parameters.subparameters.SingleSubParameterRelationInput;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
  * @author Andres BEL ALONSO
  * @param <T> : The type of Object returned when an object is returned
  */
-public class InputBooleanParameter<T> extends InputParameter<Boolean>{
+public class InputBooleanParameter<T> extends InputParameter<T>{
     
     private final T value;
     private final String representingString;
@@ -37,7 +38,7 @@ public class InputBooleanParameter<T> extends InputParameter<Boolean>{
      * 
      * @param parameterName The name of the parameter
      * @param value The value returned whe the parameter is true
-     * @param representingString : the string representing the value
+     * @param representingString  the string representing the value
      */
     public InputBooleanParameter(ParameterName parameterName, T value, String representingString) {
         super(parameterName);
@@ -51,16 +52,16 @@ public class InputBooleanParameter<T> extends InputParameter<Boolean>{
      * @return A list containing (or not) the associated object
      */
     @Override
-    public List<ExecutionParameter> getPosibleValues(int maxValues) {
-        List<ExecutionParameter> res = new LinkedList<>();
+    public List<ExecutionParameter<T>> getPosibleValues(int maxValues) {
+        List<ExecutionParameter<T>> res = new LinkedList<>();
         if(maxValues == 0 ) {
             return res;
         }
-        res.add(new ExecutionParameter(this.getParameterName(), value, representingString));
+        res.add(new ExecutionParameter<>(this.getParameterName(), value, representingString));
         if(maxValues == 1) {
             return res;
         }
-        res.add(new NoContentExecutionParameter(this.getParameterName()));
+        res.add(new NoContentExecutionParameter<>(this.getParameterName(),value));
         return res;
     }
 
@@ -72,17 +73,30 @@ public class InputBooleanParameter<T> extends InputParameter<Boolean>{
     /**
      * 
      * @param param The son parameter
-     * @param value : true when the value is related with the existence of the parameter
+     * @param value  true when the value is related with the existence of the parameter
      * and false if the parameter is related to the absence of the value
-     * @throws io.tessilab.oss.hypop.parameters.input.InputParameter.NotValidParameterValue
      */
-    @Override
-    public void addSubparameter(InputParameter param, Boolean value) throws NotValidParameterValue {
+    protected void addSubparameter(InputParameter<?> param, Boolean value) {
         if(value) {
-            this.subParameters.add(new SingleSubParameterRelationInput(this.value, param, this.getParameterName()));
+            this.subParameters.
+                    add(new BooleanSubParameterRelation<>(value,
+                            this.getParameterName(),this.value,param));
         } else {
-            this.subParameters.add(new SingleSubParameterRelationInput(NoContentExecutionParameter.NO_CONTENT_VALUE, param, this.getParameterName()));
+            // I do not know if this works... the idea to work is that when the value does not exist, we create a
+            // execution parameter with the null value
+            this.subParameters.add(new BooleanSubParameterRelation<>(value,this.getParameterName(),
+                    this.value,param));
         }
     }
+
+    @Override
+    protected void addSubparameter(InputParameter<?> param, T value) throws NotValidParameterValue {
+        if(!this.value.equals(value)) {
+            throw new NotValidParameterValue("The value passed in argument is not a correct value");
+        }
+        this.subParameters.add(new SingleSubParameterRelationInput<>(value, param, this.getParameterName()));
+    }
+    
+    
         
 }

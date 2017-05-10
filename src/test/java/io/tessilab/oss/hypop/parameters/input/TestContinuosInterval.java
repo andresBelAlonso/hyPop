@@ -51,25 +51,25 @@ public class TestContinuosInterval {
     @Test
     public void testInterval() throws Interval.EmptyInterval {
         setUp();
-        List<ExecutionParameter> execParams = closeInterval.getPosibleValues(11);
+        List<ExecutionParameter<Double>> execParams = closeInterval.getPosibleValues(11);
         assertEquals(11, execParams.size());
         for (double i = 0; i < 11; i++) {
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("close"), i, String.valueOf(i))));
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("close"), i, String.valueOf(i))));
         }
         execParams = openInterval.getPosibleValues(9);
         assertEquals(9, execParams.size());        
         for(double i=1; i<10; i++) {
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("open"), i, String.valueOf(i))));           
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("open"), i, String.valueOf(i))));           
         }
         execParams = halfInterval1.getPosibleValues(10);
         assertEquals(10, execParams.size());         
         for(double i=1; i<11; i++) {
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("half1"), i, String.valueOf(i))));            
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("half1"), i, String.valueOf(i))));            
         }
         execParams = halfInterval2.getPosibleValues(10);
         assertEquals(10, execParams.size());            
         for(double i=0; i<10; i++) {
-            assertEquals(true, execParams.contains(new ExecutionParameter( new ParameterName("half2"), i, String.valueOf(i))));            
+            assertEquals(true, execParams.contains(new ExecutionParameter<>( new ParameterName("half2"), i, String.valueOf(i))));            
         }
         
     }

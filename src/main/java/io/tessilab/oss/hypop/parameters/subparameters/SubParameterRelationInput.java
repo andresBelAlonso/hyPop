@@ -18,6 +18,7 @@ package io.tessilab.oss.hypop.parameters.subparameters;
 import io.tessilab.oss.hypop.parameters.ParameterName;
 import io.tessilab.oss.hypop.parameters.input.InputParameter;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The class that that represents the subparameter relation between two
@@ -25,14 +26,15 @@ import java.util.List;
  * value of the father node with the parameter of the child.
  *
  * @author Andres BEL ALONSO
- * @param <T> : value type
+ * @param <T> : value type of the father parameter
  */
 public interface SubParameterRelationInput<T> {
     
     /**
      * 
      * @param maxValues The maximun number of values than the list can contain. 
-     * @return The list of values of the father parameter related to the subparameter. 
+     * @return The list of values of the father parameter related to the subparameter, note that 
+     * one of these values can be the null pointer
      */
     public List<T> getFatherValues(int maxValues);
     
@@ -41,7 +43,7 @@ public interface SubParameterRelationInput<T> {
      * @return The child {@link io.tessilab.oss.hypop.parameters.input.InputParameter} 
      * of this relation
      */
-    public InputParameter getSubParameter();
+    public InputParameter<?> getSubParameter();
     
     /**
      * 
@@ -60,7 +62,7 @@ public interface SubParameterRelationInput<T> {
      * @param value The concerned value
      * @return true if the value is a father value
      */
-    public boolean isFatherValue(T value);
+    public boolean isFatherValue(Optional<T> value);
     
     
 }

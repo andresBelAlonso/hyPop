@@ -45,15 +45,15 @@ public class TestRandomSearch {
     
     public void setUp() throws Interval.EmptyInterval, InputParameter.NotValidParameterValue {
         inputParams = new InputParametersSet();
-        Map values = new HashMap();
+        Map<String,String> values = new HashMap<>();
         values.put("knn","knn");
         values.put("random forest","random forest");
         values.put("dummy classifier","dummy classifier");
-        InputParameter classifierParameter = new NominativeInputParameter(classifierName, values);
-        InputParameter kParam = new IntegerInterval(1, 30, kParamName, true, true);
-        InputParameter minToKnow = new ContinuousInterval(0.0, 1.0, minToKnowName, true, true);
-        InputParameter selectedParamsPart = new ContinuousInterval(0.0, 1.0, selectedParamsName, true, true);
-        InputParameter forestSize = new IntegerInterval(11, 150, forestSizeName, true, true);
+        InputParameter<String> classifierParameter = new NominativeInputParameter<>(classifierName, values);
+        InputParameter<Integer> kParam = new IntegerInterval(1, 30, kParamName, true, true);
+        InputParameter<Double> minToKnow = new ContinuousInterval(0.0, 1.0, minToKnowName, true, true);
+        InputParameter<Double> selectedParamsPart = new ContinuousInterval(0.0, 1.0, selectedParamsName, true, true);
+        InputParameter<Integer> forestSize = new IntegerInterval(11, 150, forestSizeName, true, true);
         //Adding the parameters
         inputParams.addParameter(kParam);
         inputParams.addParameter(classifierParameter);
@@ -70,7 +70,7 @@ public class TestRandomSearch {
     @Test
     public void testManager() throws Interval.EmptyInterval, InputParameter.NotValidParameterValue {
         setUp();
-        RandomSearchParamManager manager = new RandomSearchParamManager(inputParams, 10);
+        RandomSearchParamManager<?,?> manager = new RandomSearchParamManager<>(inputParams, 10);
         ExecutionParametersSet params = manager.getNonBuildParameters();
         assertEquals(true, params.containsParameter(classifierName));
         if(params.getExecParameter(classifierName).getValue().equals("knn")) {

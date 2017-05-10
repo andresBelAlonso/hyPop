@@ -53,7 +53,8 @@ public class TestInputParameterSet {
         param1Set.put(String.valueOf(param1Val3),param1Val3);
         param1Set.put(String.valueOf(param1Val4),param1Val4);
         param1Set.put(String.valueOf(param1Val5),param1Val5);
-        NominativeInputParameter param1 = new NominativeInputParameter(new ParameterName("param1"), param1Set);
+        NominativeInputParameter<Integer> param1 = 
+                new NominativeInputParameter<>(new ParameterName("param1"), param1Set);
         // param 2 building
         ContinuousInterval param2 = new ContinuousInterval(0.0, 10.0, new ParameterName("param2"), true, true);
         // param 3 building
@@ -63,10 +64,10 @@ public class TestInputParameterSet {
         // param 5 building
         File file1 = new File("");
         BufferedImage image = new BufferedImage(1, 1, 1);
-        Map param5Set = new HashMap<>();
+        Map<String,Object> param5Set = new HashMap<>();
         param5Set.put("file1",file1);
         param5Set.put("image",image);
-        NominativeInputParameter param5 = new NominativeInputParameter(new ParameterName("param5"), param5Set);
+        NominativeInputParameter<Object> param5 = new NominativeInputParameter<>(new ParameterName("param5"), param5Set);
         //param 6 building
         IntegerInterval param6 = new IntegerInterval(0, 10, new ParameterName("param6"), true, true);
         // paramset building

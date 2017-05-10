@@ -22,8 +22,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * A stop condition that occurs when a target score has been reached. 
  * @author Andres BEL ALONSO
- * @param <SCORE>
- * @param <PROCESSRESULT>
+ * @param <SCORE> The type representing the score of the process result
+ * @param <PROCESSRESULT> The type of process result produced after one execution
  */
 public class MaxScoreStopCondition<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> 
         extends StopCondition<SCORE,PROCESSRESULT>{

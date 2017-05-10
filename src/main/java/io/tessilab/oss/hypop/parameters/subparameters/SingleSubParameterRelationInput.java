@@ -20,19 +20,21 @@ import io.tessilab.oss.hypop.parameters.input.InputParameter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The simpliest subrelation who associates an {@link io.tessilab.oss.hypop.parameters.input.InputParameter} with 
  * a single value.
  * @author Andres BEL ALONSO
+ * @param <T> : value type of the father parameter
  */
 public class SingleSubParameterRelationInput<T> implements SubParameterRelationInput<T>{
     
     private final T fatherValue;
-    private final InputParameter param;
+    private final InputParameter<?> param;
     private final ParameterName fatherName;
 
-    public SingleSubParameterRelationInput(T fatherValue, InputParameter param,ParameterName fatherParamName) {
+    public SingleSubParameterRelationInput(T fatherValue, InputParameter<?> param,ParameterName fatherParamName) {
         this.fatherValue = fatherValue;
         this.param = param;
         this.fatherName = fatherParamName;
@@ -46,9 +48,9 @@ public class SingleSubParameterRelationInput<T> implements SubParameterRelationI
             return new LinkedList<>();
         }
     }
-
+ 
     @Override
-    public InputParameter getSubParameter() {
+    public InputParameter<?> getSubParameter() {
         return param;
     }
 
@@ -64,7 +66,11 @@ public class SingleSubParameterRelationInput<T> implements SubParameterRelationI
     }
 
     @Override
-    public boolean isFatherValue(T value) {
-        return this.fatherValue.equals(value);
+    public boolean isFatherValue(Optional<T> value) {
+        if(value.isPresent()) {
+            return this.fatherValue.equals(value.get());
+        } else {
+            return false;
+        }
     }
 }

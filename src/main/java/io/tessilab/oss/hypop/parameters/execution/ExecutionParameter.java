@@ -22,8 +22,9 @@ import java.util.Objects;
 /**
  * A single value can take a single parameter, for a single execution. 
  * @author Andres BEL ALONSO
+ * @param <T> The type of the value of this execution parameter
  */
-public class ExecutionParameter implements Comparable<ExecutionParameter>{
+public class ExecutionParameter<T> implements Comparable<ExecutionParameter<T>>{
     
     /**
      * The name of the current parameter
@@ -32,14 +33,14 @@ public class ExecutionParameter implements Comparable<ExecutionParameter>{
     /**
      * The value of the parameter
      */
-    private final Object value;
+    private final T value;
     
     /**
      * A string that represents the value taken by the parameter
      */
     private final String stringValue;
 
-    public ExecutionParameter(ParameterName paramName, Object value, String stringValue) {
+    public ExecutionParameter(ParameterName paramName, T value, String stringValue) {
         if(paramName ==  null || value == null) {
             throw new HyperParameterSearchError("A parameter name is null");
         }
@@ -87,7 +88,7 @@ public class ExecutionParameter implements Comparable<ExecutionParameter>{
         return paramName;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -102,7 +103,7 @@ public class ExecutionParameter implements Comparable<ExecutionParameter>{
      * if this object is equal than or greater than the object passed in argument.
      */
     @Override
-    public int compareTo(ExecutionParameter o) {
+    public int compareTo(ExecutionParameter<T> o) {
         return this.paramName.compareTo(paramName);   
     }
 
@@ -110,6 +111,15 @@ public class ExecutionParameter implements Comparable<ExecutionParameter>{
         return stringValue;
     }
     
+    /**
+     * 
+     * @return true if the value contained in this execution parameter is a value that must be consider as it is, and
+     * not as an absent value for the current execution
+     */
+    public boolean containsARealValue() {
+        // Here we always return true, because it is always real
+        return true;
+    }
     
     
     

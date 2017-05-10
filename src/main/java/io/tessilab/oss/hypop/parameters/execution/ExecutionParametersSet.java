@@ -36,9 +36,9 @@ public class ExecutionParametersSet implements JobParameter {
     private static final Logger LOGGER = LogManager.getLogger(ExecutionParametersSet.class);
     
 
-    private final Map<ParameterName,ExecutionParameter> parameters;
+    private final Map<ParameterName,ExecutionParameter<?>> parameters;
 
-    public ExecutionParametersSet(List<ExecutionParameter> posibleValues) {
+    public ExecutionParametersSet(List<ExecutionParameter<?>> posibleValues) {
         this();
         posibleValues.stream()
                 .filter(e -> {return e!= null;})
@@ -75,7 +75,7 @@ public class ExecutionParametersSet implements JobParameter {
         return description;
     }
 
-    private Collection<ExecutionParameter> getParameters() {
+    private Collection<ExecutionParameter<?>> getParameters() {
         return parameters.values();
     }
 
@@ -84,7 +84,7 @@ public class ExecutionParametersSet implements JobParameter {
     }
 
     //As a parameter to this executionParametersSet
-    public void addParameter(ExecutionParameter param) {
+    public void addParameter(ExecutionParameter<?> param) {
         if(param != null ) {
             parameters.put(param.getParamName(),param);
         }
@@ -94,7 +94,7 @@ public class ExecutionParametersSet implements JobParameter {
         return parameters.isEmpty();
     }
     
-    public ExecutionParameter getExecParameter(ParameterName paramName) {
+    public ExecutionParameter<?> getExecParameter(ParameterName paramName) {
         return this.parameters.get(paramName);
     }
     
@@ -116,11 +116,11 @@ public class ExecutionParametersSet implements JobParameter {
         return res;
     }
     
-    public List<ExecutionParameter> getExecutionParameters() {
+    public List<ExecutionParameter<?>> getExecutionParameters() {
         return new LinkedList<>(this.parameters.values());
     }
 
-   public Map<ParameterName,ExecutionParameter> getExecutionParametersAsMap() {
+   public Map<ParameterName,ExecutionParameter<?>> getExecutionParametersAsMap() {
        return this.parameters;
    }
     

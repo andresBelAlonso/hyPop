@@ -47,6 +47,7 @@ public class Derivatives {
      * @param y1 y1
      * @param y2 y2 
      * @param h The h value
+     * @param context The math context object
      * @return The derivative of the value
      */
     public static BigDecimal computePseudoDerivative(BigDecimal y1,BigDecimal y2, BigDecimal h, MathContext context) {

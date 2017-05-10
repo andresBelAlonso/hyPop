@@ -91,7 +91,7 @@ public class GridParametersManager<SCORE extends Comparable<SCORE>,PROCESSRESULT
         int counter = 0;
         // first we compute de input parameters of each independent parameter
         LOGGER.trace("Computing the root execution parameters");
-        for (InputParameter curParam : set.getIndependentParameters()) {
+        for (InputParameter<?> curParam : set.getIndependentParameters()) {
             inputParams[counter] = computeExecutionParameters(curParam);
             counter++;
         }
@@ -133,7 +133,7 @@ public class GridParametersManager<SCORE extends Comparable<SCORE>,PROCESSRESULT
      * if the map is empty
      */
     @Override
-    public ExecutionParametersSet getNonBuildParameters() {
+    protected ExecutionParametersSet doGetNonBuildParameters() {
         // The vectorization method selection?
         if (!hasJobsToExplore()) {
             throw new HyperParameterSearchError("No more parameters to get. Plase call has jobs to explore before calling this method");
@@ -175,7 +175,7 @@ public class GridParametersManager<SCORE extends Comparable<SCORE>,PROCESSRESULT
     
     
 
-    private List<ExecutionParametersSet> computeExecutionParameters(InputParameter param) {
+    private<T> List<ExecutionParametersSet> computeExecutionParameters(InputParameter<T> param) {
         LOGGER.trace("Computing the parameters for {}",param.getParameterName().getParameterName());
         int parameterDiffVals = param.nbValues() == -1?this.nbValsInInterval:param.nbValues();
         if (param.isLeafParameter()) {
@@ -188,17 +188,19 @@ public class GridParametersManager<SCORE extends Comparable<SCORE>,PROCESSRESULT
         } else {
             // the parameter has some subparameters
             List<ExecutionParametersSet> resultSet = new LinkedList<>();
-            List<ExecutionParameter> execParamList =  param.getPosibleValues(parameterDiffVals);
-            for(ExecutionParameter curExecutionParameter : execParamList) {
+            List<ExecutionParameter<T>> execParamList =  param.getPosibleValues(parameterDiffVals);
+            for(ExecutionParameter<T> curExecutionParameter : execParamList) {
                 // We look for each value if there is a subparameter
-                List<InputParameter<?>> subParameters  = param.getAssociatedSubParams(curExecutionParameter.getValue());
+                // We must verify if the value contained is a value that will be use, or represents the absence of a value
+                List<InputParameter<?>> subParameters;
+                subParameters  = param.getAssociatedSubParams(curExecutionParameter);
                 if(subParameters.isEmpty()) {
                     // for this value there are not subparameters
                     resultSet.add(new ExecutionParametersSet(Arrays.asList(curExecutionParameter)));
                 } else {
                     List<ExecutionParametersSet>[] outParams = new List[subParameters.size() + 1];
                     int counter = 0;
-                    for(InputParameter subParam : subParameters) {
+                    for(InputParameter<?> subParam : subParameters) {
                         outParams[counter] = computeExecutionParameters(subParam);
                         counter++;
                     }

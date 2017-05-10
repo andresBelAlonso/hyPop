@@ -21,13 +21,21 @@ import io.tessilab.oss.hypop.parameters.ParameterName;
  * The parameter to represent the fact that an {@link io.tessilab.oss.hypop.parameters.input.InputParameter} can return something
  * that must not be used during the execution.
  * @author Andres BEL ALONSO
+ * @param <T> The type of of object that this object contains
  */
-public class NoContentExecutionParameter extends ExecutionParameter{
+public class NoContentExecutionParameter<T> extends ExecutionParameter<T>{
     
-    public static Object NO_CONTENT_VALUE = "";
-    
-    public NoContentExecutionParameter(ParameterName paramName) {
-        super(paramName, NO_CONTENT_VALUE, "");
+            
+    public static Object DEFAULT_NO_CONTENTOBJ = "";
+         
+    public NoContentExecutionParameter(ParameterName paramName, T value) {
+        super(paramName, value, "");
+    }
+
+    @Override
+    public boolean containsARealValue() {
+        // It is why this class exist
+        return false;
     }
     
     

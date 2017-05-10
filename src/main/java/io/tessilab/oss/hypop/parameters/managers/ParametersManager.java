@@ -17,10 +17,14 @@ package io.tessilab.oss.hypop.parameters.managers;
 
 import io.tessilab.oss.hypop.exceptions.HyperParameterSearchError;
 import io.tessilab.oss.hypop.execution.BlockConfiguration;
+import io.tessilab.oss.hypop.parameters.execution.ExecutionParameter;
 import io.tessilab.oss.hypop.parameters.execution.ExecutionParametersSet;
+import io.tessilab.oss.hypop.parameters.execution.NoContentExecutionParameter;
 import io.tessilab.oss.hypop.parameters.input.InputParametersSet;
 import io.tessilab.oss.hypop.results.ProcessResult;
 import io.tessilab.oss.openutils.designpatterns.observer.ParametrizedObserver;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The abstract class that represents the class to provide the parameters to 
@@ -71,7 +75,22 @@ public abstract class ParametersManager<SCORE extends Comparable<SCORE>,PROCESSR
      * more jobs to explore, a RuntimeException is throw. 
      * @return A set of parameters to execute. 
      */
-    public abstract ExecutionParametersSet getNonBuildParameters();
+    public final ExecutionParametersSet getNonBuildParameters() {
+        // This method is final because there are some generical rules verified here, and we do not want to skip it
+        ExecutionParametersSet parameterSet = doGetNonBuildParameters();
+        // We delete the instances of NoContentExecutionParameter
+        List<ExecutionParameter<?>> execParams =  parameterSet.getExecutionParameters().stream()
+                .filter(e -> !(e instanceof NoContentExecutionParameter<?>))
+                .collect(Collectors.toList());
+        return new ExecutionParametersSet(execParams);
+    }
+    
+    /**
+     * This method is called in getNonBuildParameters, to get "as they are" the non build parameters. 
+     * No considerations about the BooleanInputParameters need to be done
+     * @return The execution parameters as they are
+     */
+    protected abstract ExecutionParametersSet doGetNonBuildParameters();
     
     /**
      * 

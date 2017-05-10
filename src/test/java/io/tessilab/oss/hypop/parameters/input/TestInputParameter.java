@@ -22,6 +22,7 @@ import io.tessilab.oss.hypop.parameters.input.InputParametersSet;
 import io.tessilab.oss.hypop.parameters.input.InputParameter;
 import io.tessilab.oss.hypop.parameters.input.ContinuousInterval;
 import io.tessilab.oss.hypop.parameters.ParameterName;
+import io.tessilab.oss.hypop.parameters.execution.ExecutionParameter;
 import io.tessilab.oss.openutils.treedisplaying.TreeLinuxConsoleDisplay;
 import java.util.HashMap;
 import java.util.List;
@@ -36,9 +37,9 @@ import org.junit.Test;
 public class TestInputParameter {
     
     private InputParametersSet inputParams;
-    private InputParameter classifierParameter;
-    private InputParameter minToKnow;
-    private InputParameter kParam;
+    private InputParameter<String> classifierParameter;
+    private InputParameter<Double> minToKnow;
+    private InputParameter<Integer> kParam;
             
             
     
@@ -51,8 +52,9 @@ public class TestInputParameter {
         classifierParameter = new NominativeInputParameter(new ParameterName("classifier"), values);
         kParam = new IntegerInterval(0, 30, new ParameterName("kParam"), true, true);
         minToKnow = new ContinuousInterval(0.0, 1.0, new ParameterName("mintToKnow"), true, true);
-        InputParameter selectedParamsPart = new ContinuousInterval(0.0, 1.0, new ParameterName("selectedParamsPart"), true, true);
-        InputParameter forestSize = new IntegerInterval(10, 150, new ParameterName("forestSize"), true, true);
+        InputParameter<Double> selectedParamsPart = new ContinuousInterval(0.0, 1.0, new ParameterName("selectedParamsPart"), true, true);
+        InputParameter<Integer> forestSize 
+                = new IntegerInterval(10, 150, new ParameterName("forestSize"), true, true);
         //Adding the parameters
         inputParams.addParameter(kParam);
         inputParams.addParameter(classifierParameter);
@@ -71,8 +73,10 @@ public class TestInputParameter {
     public void testGetAssociatedSubParams() throws Interval.EmptyInterval, InputParameter.NotValidParameterValue {
         setUp();
         assertEquals(5,classifierParameter.getSubParameters().size());
-        assertEquals(2,classifierParameter.getAssociatedSubParams("knn").size());
-        List subParams = classifierParameter.getAssociatedSubParams("knn");
+        assertEquals(2,classifierParameter.
+                getAssociatedSubParams(new ExecutionParameter<>(kParam.getParameterName(),"knn","knn")).size());
+        List<InputParameter<?>> subParams = classifierParameter.
+                getAssociatedSubParams(new ExecutionParameter<>(kParam.getParameterName(),"knn","knn"));
         assertEquals(true, subParams.contains(kParam));
         assertEquals(true, subParams.contains(minToKnow));
         

@@ -17,6 +17,8 @@ package io.tessilab.oss.hypop.parameters.input;
 
 import io.tessilab.oss.hypop.parameters.ParameterName;
 import io.tessilab.oss.hypop.parameters.execution.ExecutionParameter;
+import io.tessilab.oss.hypop.parameters.subparameters.IntervalSubParameterRelation;
+import io.tessilab.oss.hypop.parameters.subparameters.SingleSubParameterRelationInput;
 import java.util.LinkedList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +27,7 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author Andres BEL ALONSO
  */
-public class IntegerInterval extends Interval<Integer,IntegerInterval> {
+public class IntegerInterval extends Interval<Integer> {
 
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(IntegerInterval.class);
 
@@ -42,19 +44,19 @@ public class IntegerInterval extends Interval<Integer,IntegerInterval> {
     }
 
     @Override
-    public List<ExecutionParameter> getPosibleValues(int maxValues) {
+    public List<ExecutionParameter<Integer>> getPosibleValues(int maxValues) {
         double step = (this.higherBorder - this.lowerBorder) / ((double) maxValues);
-        List<ExecutionParameter> res = new LinkedList<>();
+        List<ExecutionParameter<Integer>> res = new LinkedList<>();
         if (maxValues == 0) {
             return res;
         }
         if (this.includeLower) {
-            res.add(new ExecutionParameter(this.getParameterName(), lowerBorder, String.valueOf(lowerBorder)));
+            res.add(new ExecutionParameter<>(this.getParameterName(), lowerBorder, String.valueOf(lowerBorder)));
         }
         if (this.nbValues() <= maxValues) {
             for (int j = 1; j + lowerBorder < higherBorder; j++) {
                 int val = j + lowerBorder;
-                res.add(new ExecutionParameter(this.getParameterName(), val, String.valueOf(j)));
+                res.add(new ExecutionParameter<>(this.getParameterName(), val, String.valueOf(j)));
             }
         } else {
             int lastValue = lowerBorder;
@@ -64,14 +66,14 @@ public class IntegerInterval extends Interval<Integer,IntegerInterval> {
                 // The inloop value prevents infinite loops
                 int curValue = (int) (lowerBorder + i * step);
                 if (curValue != lastValue) {
-                    res.add(new ExecutionParameter(this.getParameterName(), curValue, String.valueOf(curValue)));
+                    res.add(new ExecutionParameter<>(this.getParameterName(), curValue, String.valueOf(curValue)));
                     lastValue = curValue;
                 }
                 i++;
             }
         }
         if (res.size() < maxValues && includeHigher) {
-            res.add(new ExecutionParameter(this.getParameterName(), higherBorder, String.valueOf(higherBorder)));
+            res.add(new ExecutionParameter<>(this.getParameterName(), higherBorder, String.valueOf(higherBorder)));
         }
         return res;
     }
@@ -87,13 +89,5 @@ public class IntegerInterval extends Interval<Integer,IntegerInterval> {
         }
         return courVal;
     }
-
-    @Override
-    public void addSubparameter(InputParameter param, IntegerInterval value) throws NotValidParameterValue{
-        if(!value.isIncludedInterval(value)) {
-            throw new NotValidParameterValue();
-        }
-        
-    }
-
+    
 }

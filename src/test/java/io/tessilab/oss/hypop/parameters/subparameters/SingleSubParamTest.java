@@ -15,11 +15,11 @@
  */
 package io.tessilab.oss.hypop.parameters.subparameters;
 
-import io.tessilab.oss.hypop.parameters.subparameters.SingleSubParameterRelationInput;
 import io.tessilab.oss.hypop.parameters.ParameterName;
 import io.tessilab.oss.hypop.parameters.input.InputParameter;
 import io.tessilab.oss.hypop.parameters.input.IntegerInterval;
 import io.tessilab.oss.hypop.parameters.input.Interval;
+import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -30,11 +30,11 @@ import org.junit.Test;
 public class SingleSubParamTest {
     
     private SingleSubParameterRelationInput<String> singleSubParameterRel;
-    private InputParameter param;
+    private InputParameter<Integer> param;
     
     public void setUp() throws Interval.EmptyInterval {
         param =  new IntegerInterval(0, 10, new ParameterName("adio"), true, true);
-        singleSubParameterRel = new SingleSubParameterRelationInput("hola", 
+        singleSubParameterRel = new SingleSubParameterRelationInput<>("hola", 
                 param,
                 new ParameterName("holis"));
     }
@@ -42,6 +42,7 @@ public class SingleSubParamTest {
     @Test
     public void TestIsFatherValue() throws Interval.EmptyInterval {
         setUp();
-        assertEquals(true,singleSubParameterRel.isFatherValue("hola"));
+        assertEquals(true,singleSubParameterRel.
+                isFatherValue(Optional.ofNullable("hola")));
     }
 }
