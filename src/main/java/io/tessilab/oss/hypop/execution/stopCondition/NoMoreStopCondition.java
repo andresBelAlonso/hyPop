@@ -25,11 +25,12 @@ import io.tessilab.oss.hypop.results.ProcessResult;
 public class NoMoreStopCondition<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>>
         extends StopCondition<SCORE,PROCESSRESULT>{
     
-    public static class Config extends StopCondition.Config {
+    public static class Config<SCORE extends Comparable<SCORE>,PROCESSRESULT extends
+            ProcessResult<SCORE>> extends StopCondition.Config<SCORE,PROCESSRESULT> {
 
         @Override
-        protected StopCondition build() {
-            return new NoMoreStopCondition();
+        protected StopCondition<SCORE,PROCESSRESULT> build() {
+            return new NoMoreStopCondition<>();
         }
     }
 
