@@ -19,6 +19,7 @@ import io.tessilab.oss.hypop.execution.ExecutionConfig;
 import io.tessilab.oss.hypop.execution.ExecutionRun;
 import io.tessilab.oss.hypop.execution.progress.progressBar.PBarJobsToDoMonitoring;
 import io.tessilab.oss.hypop.execution.stopCondition.NoMoreStopCondition;
+import io.tessilab.oss.hypop.extinterface.CombatMonsterInterfacev03;
 import io.tessilab.oss.hypop.extinterface.CombatMonstersInterface;
 import io.tessilab.oss.hypop.parameters.managers.GridParametersManager;
 import io.tessilab.oss.hypop.results.analyzer.NBetterResultsOutPrint;
@@ -48,17 +49,17 @@ public class FirstProblemaMain {
         String resultType = "result";
         ElasticSearchBaseData locksData = new ElasticSearchBaseData("monster", "192.168.1.107", 9300, "elasticsearch");  
         ElasticSearchBaseData saverData = new ElasticSearchBaseData("monster","192.168.1.107", 9300, "elasticsearch");
-        ExecutionConfig config = new ExecutionConfig();
+        ExecutionConfig<Double,CombatMonstersInterface.MonsterExecutionResult> config = new ExecutionConfig<>();
         
         config.setLockerDao(new ElasticSearchDAO(esType, locksData));
-        config.setParametersManagerConfig(new GridParametersManager.Config(3));
+        config.setParametersManagerConfig(new GridParametersManager.Config<>(3));
         config.setProcessInterface(new CombatMonstersInterface.Config());
         config.setStopConditionConfig(new NoMoreStopCondition.Config());
-        config.setResultAnalyzerConfig(new NBetterResultsOutPrint.Config(10,new LoggerPrintStream(NBetterResultsOutPrint.class, Level.INFO)));
+        config.setResultAnalyzerConfig(new NBetterResultsOutPrint.Config<>(10,new LoggerPrintStream(NBetterResultsOutPrint.class, Level.INFO)));
 //        config.setExecutionProgressConfig(new ShutUpMonitoring.Config());
-        config.setExecutionProgressConfig(new PBarJobsToDoMonitoring.Config(ProgressBarStyle.UNICODE_BLOCK,new LoggerPrintStream(PBarJobsToDoMonitoring.class, Level.DEBUG)));
-        config.setResultsSaverConfig(new ElasticSearchResultSaver.Config(saverData,resultType));
-        ExecutionRun run = new ExecutionRun(config);
+        config.setExecutionProgressConfig(new PBarJobsToDoMonitoring.Config<>(ProgressBarStyle.UNICODE_BLOCK,new LoggerPrintStream(PBarJobsToDoMonitoring.class, Level.DEBUG)));
+        config.setResultsSaverConfig(new ElasticSearchResultSaver.Config<>(saverData,resultType));
+        ExecutionRun<Double,CombatMonstersInterface.MonsterExecutionResult> run = new ExecutionRun<>(config);
         run.run();
     }
     

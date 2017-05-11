@@ -26,6 +26,7 @@ import io.tessilab.oss.hypop.execution.stopCondition.JobsToDoStopCondition;
 import io.tessilab.oss.hypop.execution.stopCondition.MaxScoreStopCondition;
 import io.tessilab.oss.hypop.execution.stopCondition.StopCondition;
 import io.tessilab.oss.hypop.extinterface.CombatMonsterInterfacev03;
+import io.tessilab.oss.hypop.extinterface.CombatMonstersInterface;
 import io.tessilab.oss.hypop.parameters.control.AllConditionsMustBeTrue;
 import io.tessilab.oss.hypop.parameters.managers.RandomSearchParamManager;
 import io.tessilab.oss.hypop.results.analyzer.NBetterResultsOutPrint;
@@ -55,19 +56,21 @@ public class FirstProblemMainv03 {
         String resultType = "result";
         ElasticSearchBaseData locksData = new ElasticSearchBaseData("monster", "192.168.1.107", 9300, "elasticsearch");  
         ElasticSearchBaseData saverData = new ElasticSearchBaseData("monster","192.168.1.107", 9300, "elasticsearch");
-        ExecutionConfig config = new ExecutionConfig();
+        ExecutionConfig<Double,CombatMonstersInterface.MonsterExecutionResult> config = new ExecutionConfig<>();
         
         config.setLockerDao(new ElasticSearchDAO(esType, locksData));
-        config.setParametersManagerConfig(new RandomSearchParamManager.Config(60));
+        config.setParametersManagerConfig(new RandomSearchParamManager.Config<>(60));
         config.setProcessInterface(new CombatMonsterInterfacev03.Config());
-        StopCondition.Config jobsToDoCondition = new JobsToDoStopCondition.Config(MAXIMAL_NUMBER_EXECUTIONS);
-        StopCondition.Config scoreStopCondition = new MaxScoreStopCondition.Config<>(OBJECTIVE_SCORE); 
-        List<StopCondition.Config> stopConditions = Arrays.asList(jobsToDoCondition,scoreStopCondition);
+        JobsToDoStopCondition.Config<Double,CombatMonstersInterface.MonsterExecutionResult> jobsToDoCondition =
+                new JobsToDoStopCondition.Config<>(MAXIMAL_NUMBER_EXECUTIONS);
+        StopCondition.Config<Double,CombatMonstersInterface.MonsterExecutionResult> scoreStopCondition =
+                new MaxScoreStopCondition.Config<>(OBJECTIVE_SCORE); 
+        List<StopCondition.Config<?,?>> stopConditions = Arrays.asList(jobsToDoCondition,scoreStopCondition);
         config.setStopConditionConfig(new CompositeStopCondition.Config(stopConditions));
         config.setResultAnalyzerConfig(new NBetterResultsOutPrint.Config(10,new LoggerPrintStream(NBetterResultsOutPrint.class, Level.INFO)));
         
-        List<ExecutionProgress.Config> monitoringList = Arrays.asList(new PBarJobsToDoMonitoring.Config(ProgressBarStyle.UNICODE_BLOCK,new LoggerPrintStream(PBarJobsToDoMonitoring.class, Level.DEBUG)),
-                new PBarQualityMonitoring.Config(ProgressBarStyle.UNICODE_BLOCK, new LoggerPrintStream(PBarQualityMonitoring.class, Level.DEBUG), (int) OBJECTIVE_SCORE));
+        List<ExecutionProgress.Config> monitoringList = Arrays.asList(new PBarJobsToDoMonitoring.Config<>(ProgressBarStyle.UNICODE_BLOCK,new LoggerPrintStream(PBarJobsToDoMonitoring.class, Level.DEBUG)),
+                new PBarQualityMonitoring.Config<>(ProgressBarStyle.UNICODE_BLOCK, new LoggerPrintStream(PBarQualityMonitoring.class, Level.DEBUG), (int) OBJECTIVE_SCORE));
         config.setExecutionProgressConfig(new CompositeMonitoring.Config(monitoringList));
         config.setResultsSaverConfig(new ElasticSearchResultSaver.Config(saverData,resultType));
         config.setExecParamsFiltersConfig(new AllConditionsMustBeTrue.Config());
