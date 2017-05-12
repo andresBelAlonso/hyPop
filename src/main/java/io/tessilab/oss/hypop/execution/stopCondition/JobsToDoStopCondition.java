@@ -30,7 +30,7 @@ public class JobsToDoStopCondition<SCORE extends Comparable<SCORE>, PROCESSRESUL
 
     
     public static class Config<SCORE extends Comparable<SCORE>, PROCESSRESULT extends ProcessResult<SCORE>> 
-            extends StopCondition.Config {
+            extends StopCondition.Config<SCORE,PROCESSRESULT> {
         
         private final int nbWorksToDo;
 
