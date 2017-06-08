@@ -149,8 +149,9 @@ public abstract class InputParameter<PARAM_TYPE> implements Comparable<InputPara
     protected abstract void addSubparameter(InputParameter<?> param,PARAM_TYPE value)
             throws NotValidParameterValue;
     
-    protected void addSubparameter(InputParameter<?> param,List<PARAM_TYPE> values)
+    protected void addSubparameterList(InputParameter<?> param,List<PARAM_TYPE> values)
             throws NotValidParameterValue {
+
         for(PARAM_TYPE val : values) {
             addSubparameter(param, val);
         }

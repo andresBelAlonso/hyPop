@@ -118,8 +118,8 @@ public class InputParametersSet implements TreeStructure{
      * @throws io.tessilab.oss.hypop.parameters.input.InputParameter.NotValidParameterValue Throws this when the 
      * the value that makes the relation is not a possible value of the father parameter
      */    
-    public<T> void addRelation(InputParameter<T> fatherParameter, List<T> values,InputParameter<?> subParameter) throws InputParameter.NotValidParameterValue {
-        fatherParameter.addSubparameter(subParameter, values);
+    public<T> void addRelationList(InputParameter<T> fatherParameter, List<T> values,InputParameter<?> subParameter) throws InputParameter.NotValidParameterValue {
+        fatherParameter.addSubparameterList(subParameter, values);
         verifyParamsAndAddNonExistingOnes(Arrays.asList(subParameter,fatherParameter)); 
         deleteDependParameter(subParameter);
     }
