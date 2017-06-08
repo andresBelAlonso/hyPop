@@ -29,6 +29,8 @@ import io.tessilab.oss.hypop.parameters.execution.ExecutionParametersSet;
 import io.tessilab.oss.hypop.parameters.input.InputParameter;
 import io.tessilab.oss.hypop.parameters.input.InputParametersSet;
 import io.tessilab.oss.hypop.results.ProcessResult;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -220,12 +222,18 @@ public class GridParametersManager<SCORE extends Comparable<SCORE>,PROCESSRESULT
     private List<ExecutionParametersSet> fusionExecParams(List<ExecutionParametersSet>[] inputParams) {
         int[] maxPointers = new int[inputParams.length];
         int[] pointers = new int[inputParams.length];
+        long nbExecParamSet = 1;
         for (int j = 0; j < inputParams.length; j++) {
             maxPointers[j] = inputParams[j].size() - 1;
+            nbExecParamSet *= inputParams[j].size();
         }
-        List<ExecutionParametersSet> res = new LinkedList<>();
+        if ((int) nbExecParamSet != nbExecParamSet) {
+        	throw new HyperParameterSearchError("The number of parameters in grid search overflowed !");
+        }
+        LOGGER.trace("Fusion is building {} execution parameters...", nbExecParamSet);
+        List<ExecutionParametersSet> res = new ArrayList<>((int) nbExecParamSet);
         do {
-            List<ExecutionParametersSet> midResult = new LinkedList<>();
+            List<ExecutionParametersSet> midResult = new ArrayList<>(inputParams.length);
             for (int i = 0; i < inputParams.length; i++) {
                 midResult.add(inputParams[i].get(pointers[i]));
             }

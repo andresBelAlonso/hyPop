@@ -79,7 +79,7 @@ public class TestInputParameterSet {
         paramSet.addParameter(param6);
         paramSet.addRelation(param1, param1Val1, param2);
         paramSet.addRelation(param2,new ContinuousInterval(0.0, 1.0, new ParameterName(""), true, true), param3);
-        paramSet.addRelation(param1, Arrays.asList(param1Val3,param1Val4,param1Val1), param4);
+        paramSet.addRelationList(param1, Arrays.asList(param1Val3,param1Val4,param1Val1), param4);
         paramSet.addRelation(param5, image, param6);
         // displaying
         paramSet.displayTreeStructure(new TreeLinuxConsoleDisplay());
