@@ -35,8 +35,10 @@ import io.tessilab.oss.openutils.locker.DAO;
 public class ExecutionConfig<SCORE extends Comparable<SCORE>,PROCESSRESULT extends ProcessResult<SCORE>> {
     
     public static final boolean DEFAULT_DO_ENDED_JOBS = true;
-    
+
     public static final long DEFAULT_TOO_OLD_LOCK = 5000000;
+    
+    public static final int DEFAULT_WAIT_TIME = 5000;
     
     private ParametersManager.Config<SCORE,PROCESSRESULT> paramsConfig;
     private ResultsSaver.Config<SCORE,PROCESSRESULT> resultsSaverConfig;
@@ -50,6 +52,8 @@ public class ExecutionConfig<SCORE extends Comparable<SCORE>,PROCESSRESULT exten
     private DAO lockerDao;
     private long tooOldLock = DEFAULT_TOO_OLD_LOCK;
     private boolean doEndedJobs = DEFAULT_DO_ENDED_JOBS;
+    private int waitTime = DEFAULT_WAIT_TIME;
+
     
     ParametersManager<SCORE,PROCESSRESULT> buildParametersManager() {
         return paramsConfig.synchroBuild();
@@ -159,6 +163,14 @@ public class ExecutionConfig<SCORE extends Comparable<SCORE>,PROCESSRESULT exten
     public void setExecParamsFiltersConfig(ExecParametersFilterSet.Config execParamsFiltersConfig) {
         this.execParamsFiltersConfig = execParamsFiltersConfig;
     }
+
+	public int getWaitTime() {
+		return waitTime;
+	}
+
+	public void setWaitTime(int waitTime) {
+		this.waitTime = waitTime;
+	}
     
     
     

@@ -101,7 +101,7 @@ public class ExecutionRun<SCORE extends Comparable<SCORE>, PROCESSRESULT extends
                 config.isDoEndedJobs(),
                 config.getTooOldLock());
 
-        locker.setWaitTime(50);
+        locker.setWaitTime(config.getWaitTime());
 
         LOGGER.info("Building the interface with the problem");
         ProcessInterface<SCORE,PROCESSRESULT> externalPb = config.buildProcessInterface();
